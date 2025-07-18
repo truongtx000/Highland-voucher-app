@@ -1,9 +1,9 @@
 import streamlit as st
 from itertools import combinations, permutations
 
-st.set_page_config(page_title="Tính voucher tối ưu", layout="centered")
+st.set_page_config(page_title="Tính voucher Highland tối ưu", layout="centered")
 
-st.title("🧮 Tính chia nhóm món để dùng Voucher tối ưu")
+st.title("🧮 Tính voucher Highland tối ưu")
 
 st.markdown("### ✅ Nhập danh sách món")
 raw_items = st.text_area(
