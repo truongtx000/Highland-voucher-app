@@ -9,7 +9,7 @@ st.markdown("### ✅ Nhập danh sách món")
 raw_items = st.text_area(
     "Mỗi dòng 1 món, định dạng: `tên món, giá` (vd: trà sữa, 45)",
     height=200,
-    placeholder="phin sữa đá, 39\ntrà đào, 55\ncf sữa m, 48"
+    placeholder="phin sữa đá,39\ntrà đào,55\ncf sữa m,48"
 )
 
 st.markdown("### 🎟️ Nhập thông tin voucher")
