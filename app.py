@@ -3,9 +3,9 @@ from itertools import combinations, permutations
 
 st.set_page_config(page_title="Tính voucher Highland tối ưu", layout="centered")
 
-st.title("🧮 Tính voucher Highland tối ưu")
+st.title("🤔 Tính voucher Highland tối ưu")
 
-st.markdown("### ✅ Nhập danh sách món")
+st.markdown("### ☕ Nhập danh sách món")
 raw_items = st.text_area(
     "Mỗi dòng 1 món, định dạng: `tên món,giá` (vd: trà sữa,45)",
     height=200,
