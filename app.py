@@ -7,7 +7,7 @@ st.title("🧮 Tính chia nhóm món để dùng Voucher tối ưu")
 
 st.markdown("### ✅ Nhập danh sách món")
 raw_items = st.text_area(
-    "Mỗi dòng 1 món, định dạng: `tên món, giá` (vd: trà sữa, 45)",
+    "Mỗi dòng 1 món, định dạng: `tên món,giá` (vd: trà sữa,45)",
     height=200,
     placeholder="phin sữa đá,39\ntrà đào,55\ncf sữa m,48"
 )
