@@ -1,108 +1,103 @@
 import streamlit as st
-import itertools
+from itertools import combinations
 
-st.set_page_config(page_title="App Tối Ưu Voucher Highland", page_icon="🥤", layout="centered")
+st.set_page_config(page_title="Highland Voucher App", layout="centered")
+st.title("🧾 KẾT QUẢ TỐI ƯU")
 
-st.title("🥤 App Tối Ưu Voucher Highland")
+# --- Nhập danh sách món ---
+st.header("📋 Nhập danh sách món")
+items_input = st.text_area("Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)", height=200)
 
-st.markdown("### ✅ Nhập danh sách món")
-st.markdown("Mỗi dòng 1 món, định dạng: `tên món,giá` (vd: trà sữa,45)")
+# --- Nhập danh sách voucher ---
+st.header("🎁 Nhập danh sách voucher")
+voucher_input = st.text_area("Nhập mỗi voucher theo dạng: min_price, discount", value="135,30\n135,30\n169,40")
 
-mon_input = st.text_area(" ", height=200, placeholder="trà sữa,45\nbạc xỉu,39\ntrà đào,55")
-items = []
-for line in mon_input.strip().split("\n"):
-    if "," in line:
-        name, price = line.strip().rsplit(",", 1)
-        try:
-            items.append((name.strip(), int(price.strip())))
-        except:
-            pass
+# --- Xử lý dữ liệu ---
+def parse_items(text):
+    lines = text.strip().split("\n")
+    items = []
+    for i, line in enumerate(lines):
+        if "," in line:
+            name, price = line.rsplit(",", 1)
+            items.append({"name": name.strip(), "price": int(price.strip())})
+    return items
 
-st.markdown("### 🎟 Nhập danh sách voucher")
-st.markdown("Mỗi dòng 1 voucher, định dạng: `giá trị tối thiểu,giảm giá` (vd: 135,30)")
+def parse_vouchers(text):
+    lines = text.strip().split("\n")
+    vouchers = []
+    for line in lines:
+        if "," in line:
+            min_total, discount = map(int, line.strip().split(","))
+            vouchers.append({
+                "min_total": min_total,
+                "discount": discount,
+                "label": f"🎁 ({min_total}k -{discount}k)"
+            })
+    return vouchers
 
-voucher_input = st.text_area(" ", height=100, placeholder="135,30\n169,40")
-vouchers = []
-for line in voucher_input.strip().split("\n"):
-    if "," in line:
-        min_val, discount = line.strip().split(",", 1)
-        try:
-            vouchers.append((int(min_val.strip()), int(discount.strip())))
-        except:
-            pass
+items = parse_items(items_input)
+vouchers = parse_vouchers(voucher_input)
 
-if not vouchers:
-    vouchers = [(135, 30), (169, 40)]
+# --- Tìm tổ hợp tối ưu ---
+def find_best_group(available_items, min_total):
+    best_combo = None
+    min_above = float("inf")
+    for r in range(1, len(available_items) + 1):
+        for combo in combinations(available_items, r):
+            total = sum(i["price"] for i in combo)
+            if total >= min_total and total < min_above:
+                best_combo = combo
+                min_above = total
+    return best_combo, min_above
 
-st.markdown("💡 Nếu không nhập gì thì sẽ dùng mặc định: 135k giảm 30k và 169k giảm 40k.")
+def apply_vouchers(items, vouchers):
+    remaining_items = items.copy()
+    used_groups = []
+    total_discounted_cost = 0
 
-if st.button("🚀 Tính toán") and items:
-    n = len(items)
-    best_result = None
+    for voucher in sorted(vouchers, key=lambda v: -v["min_total"]):
+        group, group_total = find_best_group(remaining_items, voucher["min_total"])
+        if group:
+            for item in group:
+                remaining_items.remove(item)
+            used_groups.append({
+                "voucher": voucher,
+                "items": group,
+                "total": group_total,
+                "final": group_total - voucher["discount"]
+            })
+            total_discounted_cost += group_total - voucher["discount"]
 
-    def calc_total(group, voucher):
-        total = sum(p for _, p in group)
-        used = False
-        if voucher and total >= voucher[0]:
-            total -= voucher[1]
-            used = True
-        return total, used
+    if remaining_items:
+        final = sum(i["price"] for i in remaining_items)
+        used_groups.append({
+            "voucher": None,
+            "items": remaining_items,
+            "total": final,
+            "final": final
+        })
+        total_discounted_cost += final
 
-    voucher_opts = [(None, None)] + list(enumerate(vouchers))
+    return used_groups, total_discounted_cost
 
-    for combo in itertools.product([0, 1], repeat=n):
-        group1 = [items[i] for i in range(n) if combo[i] == 0]
-        group2 = [items[i] for i in range(n) if combo[i] == 1]
-
-        for id1, voucher1 in voucher_opts:
-            for id2, voucher2 in voucher_opts:
-                if voucher1 and voucher2 and id1 == id2:
-                    continue  # Không dùng cùng voucher cho cả 2 nhóm
-
-                total1, used1 = calc_total(group1, voucher1)
-                total2, used2 = calc_total(group2, voucher2)
-
-                total_cost = total1 + total2
-                total_discount = (voucher1[1] if used1 else 0) + (voucher2[1] if used2 else 0)
-                used_count = (used1 * len(group1)) + (used2 * len(group2))
-
-                result = {
-                    "group1": group1,
-                    "group2": group2,
-                    "voucher1": voucher1 if used1 else None,
-                    "voucher2": voucher2 if used2 else None,
-                    "total_cost": total_cost,
-                    "total_discount": total_discount,
-                    "used_count": used_count,
-                }
-
-                if (
-                    best_result is None
-                    or result["total_discount"] > best_result["total_discount"]
-                    or (
-                        result["total_discount"] == best_result["total_discount"]
-                        and result["total_cost"] < best_result["total_cost"]
-                    )
-                    or (
-                        result["total_discount"] == best_result["total_discount"]
-                        and result["total_cost"] == best_result["total_cost"]
-                        and result["used_count"] < best_result["used_count"]
-                    )
-                ):
-                    best_result = result
-
-    if best_result:
-        st.markdown("## 🧾 **KẾT QUẢ TỐI ƯU**")
-
-        def show_group(title, group, voucher):
-            st.markdown(f"**{title}**" + (f" 🎁 *({voucher[0]}k 🧾 -{voucher[1]}k)*" if voucher else ""))
-            for name, price in group:
-                st.markdown(f"- {name} ({price}k)")
-            st.markdown(f"**Tổng:** {sum(p for _, p in group)}k")
-
-        show_group("Nhóm 1", best_result["group1"], best_result["voucher1"])
-        show_group("Nhóm 2", best_result["group2"], best_result["voucher2"])
-
-        st.success(f"✅ Tổng chi phí sau giảm giá: {best_result['total_cost']}k (giảm được {best_result['total_discount']}k)")
+# --- Hiển thị kết quả ---
+if st.button("🚀 Tính kết quả tối ưu"):
+    if not items:
+        st.warning("❗ Vui lòng nhập ít nhất 1 món.")
+    elif not vouchers:
+        st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
     else:
-        st.warning("Không tìm được tổ hợp phù hợp.")
+        result_groups, final_cost = apply_vouchers(items, vouchers)
+
+        st.subheader("📄 KẾT QUẢ TỐI ƯU")
+        for idx, group in enumerate(result_groups, 1):
+            if group["voucher"]:
+                st.markdown(f"**Nhóm {idx}** {group['voucher']['label']} _(Tổng: {group['total']}k → {group['final']}k)_")
+            else:
+                st.markdown(f"**Nhóm {idx}** _(Không dùng voucher)_ _(Tổng: {group['total']}k)_")
+            st.markdown("\n".join([f"- {item['name']} ({item['price']}k)" for item in group["items"]]))
+            st.markdown("")
+
+        original_total = sum(item["price"] for item in items)
+        total_discount = original_total - final_cost
+        st.success(f"✅ Tổng chi phí sau giảm giá: **{final_cost}k** (giảm được **{total_discount}k**)")
