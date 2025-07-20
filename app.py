@@ -48,7 +48,7 @@ if st.button("🚀 Tính toán") and items:
             used = True
         return total, used
 
-    voucher_opts = [None] + list(enumerate(vouchers))
+    voucher_opts = [(None, None)] + list(enumerate(vouchers))
 
     for combo in itertools.product([0, 1], repeat=n):
         group1 = [items[i] for i in range(n) if combo[i] == 0]
