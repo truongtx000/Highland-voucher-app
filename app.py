@@ -4,16 +4,6 @@ import itertools
 st.title("🎁 KẾT QUẢ TỐI ƯU")
 
 items_input = st.text_area("Nhập danh sách món (mỗi dòng 1 món, ví dụ: cf sữa m 39)", value="""
-Cf dừa 75k
-Cf sữa M 39k
-Chanh dây đá viên 39k
-Ct 1 trà dâu tằm m - 59k
-1 cf sữa m (39k)
-1 cf anhvu m (39k)
-Loan trà vải s (45k)
-Phindi hạnh nhân (49k)
-Cf sữa vừa thêm kem muối mặn size M (49k)
-Bạc xỉu vừa (39k)
 """.strip())
 
 voucher_input = st.text_area("Nhập danh sách voucher (ví dụ: 169 40)", value="""
