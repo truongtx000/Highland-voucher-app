@@ -1,80 +1,104 @@
 import streamlit as st
-import itertools
+from itertools import combinations
 
-st.title("🎁 KẾT QUẢ TỐI ƯU")
+st.set_page_config(page_title="Highland Voucher App", layout="centered")
+st.title("🧾 KẾT QUẢ TỐI ƯU")
 
-items_input = st.text_area("Nhập danh sách món (mỗi dòng 1 món, ví dụ: cf sữa m 39)", value="""
-""".strip())
+# --- Nhập danh sách món ---
+st.header("📋 Nhập danh sách món")
+items_input = st.text_area("Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)", height=200)
 
-voucher_input = st.text_area("Nhập danh sách voucher (ví dụ: 169 40)", value="""
-169 40
-135 30
-135 30
-""".strip())
+# --- Nhập danh sách voucher ---
+st.header("🎁 Nhập danh sách voucher")
+voucher_input = st.text_area("Nhập mỗi voucher theo dạng: min_price, discount", value="135,30\n135,30\n169,40")
 
+# --- Xử lý dữ liệu ---
 def parse_items(text):
-    lines = text.strip().split('\n')
+    lines = text.strip().split("\n")
     items = []
-    for idx, line in enumerate(lines):
-        name_part = line.strip().rsplit('(', 1)[0].strip()
-        price = int(''.join([c for c in line if c.isdigit()]))
-        items.append({'id': idx, 'name': name_part, 'price': price})
+    for i, line in enumerate(lines):
+        if "," in line:
+            name, price = line.rsplit(",", 1)
+            items.append({"name": name.strip(), "price": int(price.strip())})
     return items
 
 def parse_vouchers(text):
-    lines = text.strip().split('\n')
+    lines = text.strip().split("\n")
     vouchers = []
-    for i, line in enumerate(lines):
-        parts = line.strip().split()
-        min_total = int(parts[0])
-        discount = int(parts[1])
-        vouchers.append({'id': f'V{i+1}', 'min_total': min_total, 'discount': discount})
-    return sorted(vouchers, key=lambda v: -v['discount'])
+    for line in lines:
+        if "," in line:
+            min_total, discount = map(int, line.strip().split(","))
+            vouchers.append({
+                "min_total": min_total,
+                "discount": discount,
+                "label": f"🎁 ({min_total}k -{discount}k)"
+            })
+    return vouchers
 
 items = parse_items(items_input)
 vouchers = parse_vouchers(voucher_input)
 
-used_ids = set()
-results = []
-
+# --- Tìm tổ hợp tối ưu ---
 def find_best_group(available_items, min_total):
     best_combo = None
-    best_total = float('inf')
-    n = len(available_items)
-    for r in range(1, n+1):
-        for combo in itertools.combinations(available_items, r):
-            total_price = sum(item['price'] for item in combo)
-            if total_price >= min_total and total_price < best_total:
-                best_total = total_price
+    min_above = float("inf")
+    for r in range(1, len(available_items) + 1):
+        for combo in combinations(available_items, r):
+            total = sum(i["price"] for i in combo)
+            if total >= min_total and total < min_above:
                 best_combo = combo
-    return best_combo
+                min_above = total
+    return best_combo, min_above
 
-for voucher in vouchers:
-    available = [item for item in items if item['id'] not in used_ids]
-    best_group = find_best_group(available, voucher['min_total'])
-    if best_group:
-        group_ids = [item['id'] for item in best_group]
-        used_ids.update(group_ids)
-        results.append({'items': best_group, 'voucher': voucher})
+def apply_vouchers(items, vouchers):
+    remaining_items = items.copy()
+    used_groups = []
+    total_discounted_cost = 0
 
-unused_items = [item for item in items if item['id'] not in used_ids]
+    for voucher in sorted(vouchers, key=lambda v: -v["min_total"]):
+        group, group_total = find_best_group(remaining_items, voucher["min_total"])
+        if group:
+            for item in group:
+                remaining_items.remove(item)
+            used_groups.append({
+                "voucher": voucher,
+                "items": group,
+                "total": group_total,
+                "final": group_total - voucher["discount"]
+            })
+            total_discounted_cost += group_total - voucher["discount"]
 
-total_after_discount = 0
+    if remaining_items:
+        final = sum(i["price"] for i in remaining_items)
+        used_groups.append({
+            "voucher": None,
+            "items": remaining_items,
+            "total": final,
+            "final": final
+        })
+        total_discounted_cost += final
 
-for i, group in enumerate(results):
-    st.markdown(f"### Nhóm {i+1} 🎁 ({group['voucher']['min_total']}k -{group['voucher']['discount']}k)")
-    for item in group['items']:
-        st.write(f"- {item['name']} ({item['price']}k)")
-    total = sum(item['price'] for item in group['items'])
-    st.markdown(f"**Tổng: {total}k**")
-    total_after_discount += total - group['voucher']['discount']
+    return used_groups, total_discounted_cost
 
-if unused_items:
-    st.markdown(f"### Nhóm {len(results)+1} (Không dùng voucher)")
-    for item in unused_items:
-        st.write(f"- {item['name']} ({item['price']}k)")
-    total = sum(item['price'] for item in unused_items)
-    st.markdown(f"**Tổng: {total}k**")
-    total_after_discount += total
+# --- Hiển thị kết quả ---
+if st.button("🚀 Tính kết quả tối ưu"):
+    if not items:
+        st.warning("❗ Vui lòng nhập ít nhất 1 món.")
+    elif not vouchers:
+        st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
+    else:
+        result_groups, final_cost = apply_vouchers(items, vouchers)
 
-st.success(f"✅ Tổng chi phí sau giảm giá: {total_after_discount}k")
+        st.subheader("📄 KẾT QUẢ TỐI ƯU")
+        for idx, group in enumerate(result_groups, 1):
+            if group["voucher"]:
+                st.markdown(f"**Nhóm {idx}** {group['voucher']['label']} _(Tổng: {group['total']}k → {group['final']}k)_")
+            else:
+                st.markdown(f"**Nhóm {idx}** _(Không dùng voucher)_ _(Tổng: {group['total']}k)_")
+            st.markdown("\n".join([f"- {item['name']} ({item['price']}k)" for item in group["items"]]))
+            st.markdown("")
+
+        original_total = sum(item["price"] for item in items)
+        total_discount = original_total - final_cost
+        st.success(f"✅ Tổng chi phí sau giảm giá: **{final_cost}k** (giảm được **{total_discount}k**)")
+        
