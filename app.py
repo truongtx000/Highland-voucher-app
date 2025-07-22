@@ -3,7 +3,6 @@ import itertools
 
 st.title("🎁 KẾT QUẢ TỐI ƯU")
 
-# Nhập danh sách món
 items_input = st.text_area("Nhập danh sách món (mỗi dòng 1 món, ví dụ: cf sữa m 39)", value="""
 Cf dừa 75k
 Cf sữa M 39k
@@ -17,7 +16,6 @@ Cf sữa vừa thêm kem muối mặn size M (49k)
 Bạc xỉu vừa (39k)
 """.strip())
 
-# Nhập voucher
 voucher_input = st.text_area("Nhập danh sách voucher (ví dụ: 169 40)", value="""
 169 40
 135 30
@@ -27,10 +25,10 @@ voucher_input = st.text_area("Nhập danh sách voucher (ví dụ: 169 40)", val
 def parse_items(text):
     lines = text.strip().split('\n')
     items = []
-    for line in lines:
+    for idx, line in enumerate(lines):
         name_part = line.strip().rsplit('(', 1)[0].strip()
         price = int(''.join([c for c in line if c.isdigit()]))
-        items.append({'name': name_part, 'price': price})
+        items.append({'id': idx, 'name': name_part, 'price': price})
     return items
 
 def parse_vouchers(text):
@@ -41,15 +39,14 @@ def parse_vouchers(text):
         min_total = int(parts[0])
         discount = int(parts[1])
         vouchers.append({'id': f'V{i+1}', 'min_total': min_total, 'discount': discount})
-    return sorted(vouchers, key=lambda v: -v['discount'])  # Ưu tiên voucher giảm nhiều
+    return sorted(vouchers, key=lambda v: -v['discount'])
 
 items = parse_items(items_input)
 vouchers = parse_vouchers(voucher_input)
 
-used_indexes = set()
+used_ids = set()
 results = []
 
-# Hàm tìm tổ hợp tối ưu cho 1 voucher
 def find_best_group(available_items, min_total):
     best_combo = None
     best_total = float('inf')
@@ -62,19 +59,16 @@ def find_best_group(available_items, min_total):
                 best_combo = combo
     return best_combo
 
-remaining_items = items[:]
 for voucher in vouchers:
-    available = [item for i, item in enumerate(remaining_items) if i not in used_indexes]
+    available = [item for item in items if item['id'] not in used_ids]
     best_group = find_best_group(available, voucher['min_total'])
     if best_group:
-        group_indexes = [remaining_items.index(item) for item in best_group]
-        used_indexes.update(group_indexes)
+        group_ids = [item['id'] for item in best_group]
+        used_ids.update(group_ids)
         results.append({'items': best_group, 'voucher': voucher})
 
-# Các món không dùng voucher
-unused_items = [item for i, item in enumerate(remaining_items) if i not in used_indexes]
+unused_items = [item for item in items if item['id'] not in used_ids]
 
-# Hiển thị kết quả
 total_after_discount = 0
 
 for i, group in enumerate(results):
