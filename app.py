@@ -73,32 +73,44 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
-    display: flex; /* Dùng flexbox để căn chỉnh icon và nội dung */
-    align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử (để tiêu đề sát icon)*/
-    margin-bottom: 25px; /* Khoảng cách giữa các section */
-    box-sizing: border-box;
-}
-
-/* Icon lớn trong hình tròn */
-.icon-circle {
-    background-color: #F8D882; /* Màu vàng của hình tròn */
-    border-radius: 50%; /* Hình tròn hoàn hảo */
-    width: 70px; /* Kích thước hình tròn */
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 15px; /* Khoảng cách giữa hình tròn và text */
-    flex-shrink: 0; /* Không cho hình tròn bị co lại */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
-}
-
-.icon-circle img { /* Định dạng ảnh bên trong hình tròn */
-    width: 60%; /* Kích thước ảnh so với hình tròn */
-    height: 60%;
-    object-fit: contain; /* Đảm bảo ảnh vừa vặn */
-    vertical-align: middle; /* Căn giữa ảnh trong thẻ img */
-}
+        display: flex;
+        align-items: center;
+        background-color: #fffcef;
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border: 1px solid #ddb87d;
+    }
+    .icon-circle {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #fce4c5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+    }
+    .icon-circle img {
+        width: 30px;
+        height: 30px;
+    }
+    .input-content h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .input-content p {
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        color: #555;
+    }
+    /* Bỏ màu xám bên trái textarea */
+    .block-container .stTextArea {
+        padding-left: 0 !important;
+        background-color: transparent;
+    }
 
 /* Nội dung text và textbox của phần nhập liệu (tiêu đề và mô tả) */
 .input-content {
