@@ -470,11 +470,11 @@ with st.container(border=False):
     st.markdown('<div class="main-container">', unsafe_allow_html=True) # Mở div main-container
 
     # Phần tiêu đề của ứng dụng
-    st.markdown('<div class="header-bg"><h1 class="header-title">Tiết Kiệm Highland</h1><h2 class="header-subtitle">Cùng Voucher</h2></div>', unsafe_allow_html=True)
+    st.markdown('<div class="header-bg"><h1 class="header-title">Tiết Kiệm Highland cùng voucher</h1></div>', unsafe_allow_html=True)
 
     # Đường dẫn tới ảnh trên GitHub (thay thế bằng repo của bạn nếu khác)
     # Dựa trên ảnh bạn cung cấp, đây là đường dẫn raw mặc định cho repo của bạn
-    GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongb000/Highland-voucher-app/main/images/"
+    GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
 
