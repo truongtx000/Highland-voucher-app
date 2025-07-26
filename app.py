@@ -22,7 +22,7 @@ body {
 header { visibility: hidden; }
 footer { visibility: hidden; }
 
-/* Container chính bao bọc toàn bộ nội dung ứng dụng */
+/* Container chính của Streamlit, điều chỉnh padding để nội dung sát hơn */
 .stApp {
     background-color: #FFFDF1; /* Đảm bảo nền app trùng với body */
 }
@@ -34,12 +34,7 @@ footer { visibility: hidden; }
     padding-left: 0rem; /* Giảm padding trái */
     padding-right: 0rem; /* Giảm padding phải */
     max-width: 700px; /* Giới hạn chiều rộng để giống ảnh */
-}
-
-/* Thay đổi màu nền của div chứa nội dung chính */
-div[data-testid="stVerticalBlock"] > div:first-child {
-    background-color: #FFFDF1; /* Màu nền cho toàn bộ khu vực nội dung */
-    padding: 0px; /* Bỏ padding mặc định nếu có */
+    margin: 0 auto; /* Căn giữa block container */
 }
 
 /*
@@ -62,7 +57,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: #A02B2B; /* Màu đỏ đậm của Highland */
     color: white;
     padding: 30px 20px 20px 20px; /* Đệm trên dưới, không đệm ngang */
-    border-radius: 10px; /* Bo góc nhẹ */
+    border-radius: 0px; /* Bỏ bo góc */
     text-align: center;
     margin-bottom: 30px; /* Khoảng cách với phần tiếp theo */
     box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Đổ bóng mạnh hơn cho header */
@@ -110,21 +105,24 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
 }
 
-.icon-circle span {
-    font-size: 2.5em; /* Kích thước icon bên trong */
-    color: #AB6600; /* Màu nâu cam cho icon */
+.icon-circle img { /* Định dạng ảnh bên trong hình tròn */
+    width: 60%; /* Kích thước ảnh so với hình tròn */
+    height: 60%;
+    object-fit: contain; /* Đảm bảo ảnh vừa vặn */
 }
 
-/* Nội dung text của phần nhập liệu (tiêu đề và mô tả) */
+
+/* Nội dung text và textbox của phần nhập liệu (tiêu đề và mô tả) */
 .input-content {
     flex-grow: 1; /* Cho phép nội dung này mở rộng */
+    /* width: calc(100% - 85px); /* Tính toán lại chiều rộng cho content (width của icon-circle + margin-right) */
 }
 
 .input-content h2 {
     font-size: 1.4em; /* Kích thước chữ tiêu đề */
     font-weight: bold;
     color: #333;
-    margin-top: 0;
+    margin-top: 0px; /* Đảm bảo sát với icon */
     margin-bottom: 5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
 }
@@ -143,13 +141,18 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    width: calc(100% - 20px); /* Điều chỉnh chiều rộng để nó không tràn hết bề ngang và có khoảng cách trái phải */
+    margin-left: 20px; /* Đẩy textbox vào một chút để có khoảng cách bên trái */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
-    min-height: 100px; /* Chiều cao tối thiểu */
+    min-height: 130px; /* Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
 }
 
+/* Cho text area của voucher nhỏ lại một chút */
+#root > div:nth-child(1) > div.stApp.st-emotion-cache-1wvfyk2.ea3g5ff3 > div > section.main.st-emotion-cache-uf99v8.ea3g5ff8 > div.block-container.st-emotion-cache-1y4pm59.ea3g5ff9 > div:nth-child(5) > div > textarea {
+    min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea */
+}
 
 /* Định dạng cho nút bấm chính */
 div.stButton > button:first-child {
@@ -264,9 +267,8 @@ div.stSuccess {
 }
 
 /* Điều chỉnh lại layout của Streamlit widget để phù hợp với flexbox của input-section */
-div[data-testid="stHorizontalBlock"] > div:nth-child(2) > div:first-child {
-    flex-grow: 1; /* Cho phép text area chiếm phần còn lại của không gian */
-}
+/* Đây là class được Streamlit tự động tạo cho div chứa text area, bạn có thể cần kiểm tra lại bằng F12 */
+/* .st-ce { flex-grow: 1; } */ /* Tùy chỉnh nếu cần để text area nằm đúng vị trí */
 
 </style>
     """,
@@ -447,9 +449,15 @@ with st.container(border=False):
     # Phần tiêu đề của ứng dụng
     st.markdown('<div class="header-bg"><h1 class="header-title">Tiết Kiệm Highland</h1><h2 class="header-subtitle">Cùng Voucher</h2></div>', unsafe_allow_html=True)
 
+    # Đường dẫn tới ảnh trên GitHub (thay thế bằng repo của bạn nếu khác)
+    # Giả sử repo của bạn là 'your-username/Highland-voucher-app'
+    GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongb000/Highland-voucher-app/main/images/"
+    COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
+    VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
+
     # Phần nhập danh sách món
     st.markdown('<div class="input-section">', unsafe_allow_html=True)
-    st.markdown('<div class="icon-circle"><span>☕</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="icon-circle"><img src="{COFFEE_ICON_URL}" alt="Coffee Icon"></div>', unsafe_allow_html=True)
     st.markdown('<div class="input-content">', unsafe_allow_html=True)
     st.markdown('<h2>Nhập danh sách món</h2>', unsafe_allow_html=True)
     st.markdown('<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>', unsafe_allow_html=True)
@@ -458,7 +466,7 @@ with st.container(border=False):
 
     # Phần nhập danh sách voucher
     st.markdown('<div class="input-section">', unsafe_allow_html=True)
-    st.markdown('<div class="icon-circle"><span>🎁</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="icon-circle"><img src="{VOUCHER_ICON_URL}" alt="Voucher Icon"></div>', unsafe_allow_html=True)
     st.markdown('<div class="input-content">', unsafe_allow_html=True)
     st.markdown('<h2>Nhập danh sách voucher</h2>', unsafe_allow_html=True)
     st.markdown('<p>Nhập mỗi voucher theo dạng: min_price, discount</p>', unsafe_allow_html=True)
