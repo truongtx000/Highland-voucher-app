@@ -31,8 +31,8 @@ footer { visibility: hidden; }
 .block-container {
     padding-top: 0rem;
     padding-bottom: 0rem;
-    padding-left: 20px; /* THAY ĐỔI: Thêm padding trái */
-    padding-right: 20px; /* THAY ĐỔI: Thêm padding phải */
+    padding-left: 20px; /* Thêm padding trái để tránh chữ sát màn hình*/
+    padding-right: 20px; /* Thêm padding phải để tránh chữ sát màn hình*/
     max-width: 700px; /* Giới hạn chiều rộng để giống ảnh */
     margin: 0 auto; /* Căn giữa block container */
     box-sizing: border-box; /* Bao gồm padding trong kích thước */
@@ -59,7 +59,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
 }
 
-/* THAY ĐỔI: Tiêu đề chính thành một thẻ h1 duy nhất */
+/* THAY ĐỔI: Tiêu đề chính thành một thẻ h1 duy nhất*/
 .header-bg h1 {
     font-size: 2.5em; /* Kích thước chữ lớn */
     font-weight: 900; /* Rất đậm */
@@ -74,9 +74,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
     display: flex; /* Dùng flexbox để căn chỉnh icon và nội dung */
-    align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử */
+    align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử (để tiêu đề sát icon)*/
     margin-bottom: 25px; /* Khoảng cách giữa các section */
-    /* padding: 0 20px; Bỏ padding ở đây vì đã có ở .block-container */
     box-sizing: border-box;
 }
 
@@ -110,10 +109,10 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     font-size: 1.4em; /* Kích thước chữ tiêu đề */
     font-weight: bold;
     color: #333;
-    margin-top: 0px; /* THAY ĐỔI: Đảm bảo sát với icon */
+    margin-top: 0px !important; /* Đảm bảo sát với icon, override mọi margin mặc định của h2*/
     margin-bottom: 5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
-    line-height: 1.2; /* Tăng line-height cho tiêu đề */
+    line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
 .input-content p {
@@ -129,8 +128,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 90px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái */
-    margin-left: 85px; /* THAY ĐỔI: Đẩy textbox sang phải nhiều hơn (icon_width + margin_right + thêm khoảng cách) */
+    width: calc(100% - 95px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái (70px icon + 15px margin-right + 10px thêm)*/
+    margin-left: 85px; /* THAY ĐỔI: Đẩy textbox sang phải nhiều hơn (icon_width + margin_right)*/
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
@@ -138,20 +137,21 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 }
 
 /* THAY ĐỔI: Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
-/* Selector này nhắm vào container của text area Streamlit để làm mất màu xám */
+/* Đây là class được Streamlit tạo cho div bọc quanh textarea */
 div[data-testid="stTextArea"] > div:first-child > div:first-child {
-    background-color: #FFFDF1 !important; /* Màu nền trùng với body */
+    background-color: #FFFDF1 !important; /* Màu nền trùng với body*/
     border: none !important; /* Bỏ viền */
     box-shadow: none !important; /* Bỏ đổ bóng */
     padding: 0 !important; /* Xóa padding nếu có */
+    margin: 0 !important; /* Xóa margin */
 }
 
 
 /* Cho text area của voucher nhỏ lại một chút */
-/* Dựa vào cấu trúc HTML của Streamlit, đây là cách target text area thứ 2 */
-/* Nếu có nhiều text area, cần điều chỉnh lại để tránh ảnh hưởng không mong muốn */
+/* Dựa vào cấu trúc HTML của Streamlit, đây là cách target text area thứ 2 (voucher input) */
+/* Cần cẩn thận nếu có thêm nhiều text area khác */
 div.stTextArea:nth-of-type(2) textarea {
-    min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea */
+    min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
 }
 
 /* Định dạng cho nút bấm chính */
@@ -185,7 +185,8 @@ div.stButton > button:first-child:hover {
     font-size: 1.8em;
     font-weight: bold;
     color: #333; /* Màu chữ đen */
-    margin-top: 40px;
+    margin-top: 40px; /* Khoảng cách với nút bấm */
+    margin-bottom: 10px; /* THAY ĐỔI: Giảm margin-bottom để sát hơn với kết quả*/
     border-bottom: 2px solid #C29A5F; /* Đường gạch chân màu nâu */
     padding-bottom: 10px;
     text-align: center;
@@ -444,9 +445,9 @@ with st.container(border=False):
 
     # Phần tiêu đề của ứng dụng
     # THAY ĐỔI: Sử dụng một thẻ h1 duy nhất
-    st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland Cùng Voucher</h1></div>', unsafe_allow_html=True)
+    st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland<br>Cùng Voucher</h1></div>', unsafe_allow_html=True)
 
-    # Đường dẫn tới ảnh trên GitHub (THAY THẾ BẰNG URL BẠN ĐÃ CUNG CẤP)
+    # Đường dẫn tới ảnh trên GitHub (Đã cập nhật theo URL bạn cung cấp)
     # Đảm bảo đây là đường dẫn RAW chính xác tới file ảnh của bạn trên GitHub
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
@@ -475,7 +476,7 @@ with st.container(border=False):
         items = parse_items(items_input)
         vouchers = parse_vouchers(voucher_input)
 
-        # Chỉ tiếp tục nếu parsing không có lỗi và có dữ liệu
+        # GÓI GỌN PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY
         if items and vouchers:
             result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
 
