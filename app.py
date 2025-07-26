@@ -39,7 +39,6 @@ footer { visibility: hidden; }
 }
 
 /* Loại bỏ các box container mặc định của Streamlit nếu chúng được sử dụng */
-/* This targets the outer blocks that Streamlit wraps content in */
 div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: none !important;
     box-shadow: none !important;
@@ -123,21 +122,32 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
-/* --- Quan trọng: Loại bỏ khoảng trắng và căn chỉnh Text Area --- */
+/* --- Xử lý khoảng trắng của Text Area --- */
 
 /* Ẩn các label mặc định của Streamlit cho text area */
 .stTextArea label {
     display: none;
 }
 
-/* Đảm bảo div cha trực tiếp của textarea không có padding/margin không mong muốn */
+/* CSS cho div stTextArea và textarea thực tế */
 div[data-testid="stTextArea"] {
+    /* Đảm bảo div chính của stTextArea không có padding/margin làm lệch */
     padding: 0px !important;
     margin: 0px !important;
-    background-color: transparent !important; /* Đảm bảo không có nền trắng */
+    background-color: #FFFDF1 !important; /* Đảm bảo màu nền khớp */
     border: none !important;
     box-shadow: none !important;
 }
+
+/* Div bao bọc textarea bên trong stTextArea */
+div[data-testid="stTextArea"] > div:first-child {
+    background-color: #FFFDF1 !important; /* Đảm bảo màu nền khớp */
+    padding: 0 !important; /* Loại bỏ padding nội bộ nếu có */
+    margin: 0 !important; /* Loại bỏ margin nội bộ nếu có */
+    border: none !important; /* Bỏ border mặc định nếu có */
+    box-shadow: none !important; /* Bỏ shadow mặc định nếu có */
+}
+
 
 /* Định dạng cho vùng nhập liệu (textarea thực tế) */
 .stTextArea textarea {
@@ -153,7 +163,6 @@ div[data-testid="stTextArea"] {
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
-/* Sử dụng data-testid để nhắm mục tiêu cụ thể hơn nếu cần */
 div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
     min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
 }
@@ -161,7 +170,6 @@ div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
 /* --- Sửa lỗi nút bấm --- */
 /* Đảm bảo nút nằm gọn và có màu */
 div.stButton {
-    /* Đặt background-color cho div stButton nếu nó đang gây ra nền trắng */
     background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
     padding: 0 !important; /* Loại bỏ padding nếu có */
     margin-top: 30px; /* Khoảng cách với phần trên */
@@ -184,6 +192,8 @@ div.stButton > button:first-child {
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
     letter-spacing: 0.5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
 }
 
 /* Hiệu ứng khi di chuột qua nút */
@@ -469,13 +479,12 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # Sử dụng HTML div để tạo khoảng trắng thay vì st.columns
-    st.markdown('<div style="display: flex; align-items: flex-start;">', unsafe_allow_html=True)
-    st.markdown('<div style="width: 85px; flex-shrink: 0; background-color: #FFFDF1;"></div>', unsafe_allow_html=True) # Khoảng trống 85px
-    st.markdown('<div style="flex-grow: 1; background-color: #FFFDF1;">', unsafe_allow_html=True) # Phần chứa textarea
-    items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
-    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng các div đã mở
+    # Sử dụng st.columns để tạo khoảng thụt đầu dòng một cách đáng tin cậy hơn
+    # Cột đầu tiên sẽ là khoảng trắng (width 85px), cột thứ hai sẽ chứa text area
+    col_indent, col_textarea = st.columns([85, 1]) 
 
+    with col_textarea:
+        items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
 
     # Phần nhập danh sách voucher
     st.markdown(f"""
@@ -490,16 +499,13 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # Sử dụng HTML div để tạo khoảng trắng tương tự
-    st.markdown('<div style="display: flex; align-items: flex-start;">', unsafe_allow_html=True)
-    st.markdown('<div style="width: 85px; flex-shrink: 0; background-color: #FFFDF1;"></div>', unsafe_allow_html=True) # Khoảng trống 85px
-    st.markdown('<div style="flex-grow: 1; background-color: #FFFDF1;">', unsafe_allow_html=True) # Phần chứa textarea
-    voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
-    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng các div đã mở
+    # Sử dụng st.columns cho voucher input cũng vậy
+    col_indent_voucher, col_textarea_voucher = st.columns([85, 1])
+    with col_textarea_voucher:
+        voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
     # Nút tính toán
-    # Đặt nút trong một container có text-align center để căn giữa
     st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
     if st.button("Tính kết quả tối ưu"):
         items = parse_items(items_input)
@@ -531,6 +537,6 @@ with st.container(border=False):
             st.warning("❗ Vui lòng nhập ít nhất 1 món.")
         elif not vouchers:
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
-    st.markdown('</div>', unsafe_allow_html=True) # Đóng div căn giữa nút
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
+    st.markdown('</div>', unsafe_allow_html=True)
