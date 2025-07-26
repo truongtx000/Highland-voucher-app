@@ -24,14 +24,14 @@ st.markdown("""
         }
 
         .flex-row img {
-            width: 100px;  /* Tăng kích thước hình */
-            height: 100px;
+            width: 200px;  /* Tăng kích thước hình */
+            height: 200px;
         }
 
         .flex-content h2 {
             margin: 0;
             font-size: 1.5rem;
-            line-height: 1;  /* Giảm khoảng cách giữa tiêu đề và mô tả */
+            line-height: 0.5;  /* Giảm khoảng cách giữa tiêu đề và mô tả */
         }
 
         .flex-content p {
