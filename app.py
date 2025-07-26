@@ -145,26 +145,32 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: white; /* Nền trắng cho textbox */
 }
 
-/* THAY ĐỔI: Nhắm mục tiêu sâu hơn vào các div bao bọc st.text_area để loại bỏ khoảng trắng và nền xám */
+/* THAY ĐỔI LỚN: Nhắm mục tiêu sâu hơn và rộng hơn vào các div bao bọc st.text_area để loại bỏ khoảng trắng và nền xám */
 /* Đây là các div nội bộ của Streamlit tạo ra khoảng trắng/nền */
-div[data-testid="stVerticalBlock"] > div[data-testid="stForm"] > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div:has(textarea),
-div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div:has(textarea),
-div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:has(textarea) {
-    background-color: #FFFDF1 !important; /* Màu nền trùng với body */
+
+/* Các div stVerticalBlock và stMarkdownContainer thường là cha mẹ gây ra vấn đề */
+div[data-testid="stVerticalBlock"],
+div[data-testid="stMarkdownContainer"] {
+    background-color: #FFFDF1 !important; /* Đảm bảo màu nền trùng với body cho các block này */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Cụ thể hơn cho các div xung quanh st.text_area */
+div[data-testid="stTextArea"] {
+    background-color: #FFFDF1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    /* Có thể thử thêm display: contents; nếu vẫn còn khoảng trắng, nhưng cẩn thận với bố cục */
+    /* display: contents; */
+}
+
+/* Bên trong stTextArea, có các div con */
+div[data-testid="stTextArea"] > div:first-child,
+div[data-testid="stTextArea"] > div:first-child > div:first-child {
+    background-color: #FFFDF1 !important; /* Đảm bảo các div nội bộ này cũng trùng màu nền */
     border: none !important;
     box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Loại bỏ padding và margin của các div bao quanh trực tiếp textarea */
-div[data-testid="stTextArea"] > div:first-child > div:first-child {
-    background-color: #FFFDF1 !important; /* Đảm bảo màu nền cho div này */
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-div[data-testid="stTextArea"] > div:first-child {
     padding: 0 !important;
     margin: 0 !important;
 }
@@ -191,13 +197,11 @@ div.stButton > button:first-child {
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
     letter-spacing: 0.5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
-    font-weight: 900; /* Rất đậm */
 }
 
 /* Hiệu ứng khi di chuột qua nút */
 div.stButton > button:first-child:hover {
-    background-color: #FFFFFF; /* Màu đỏ sẫm hơn khi hover */
-    color: black;
+    background-color: #8D2525; /* Màu đỏ sẫm hơn khi hover */
     box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
     transform: translateY(-2px); /* Nút nhích lên một chút */
     cursor: pointer; /* Biểu tượng con trỏ khi di chuột */
@@ -220,11 +224,12 @@ div.stButton > button:first-child:hover {
 
 /* Container cho mỗi nhóm kết quả (voucher + món ăn) */
 .result-group {
-    background-color: #FFFDF1;
+    background-color: white;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 12px;
     border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
 .result-group-title {
