@@ -7,9 +7,48 @@ import math
 st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="centered")
 
 # --- CSS Tùy Chỉnh để tạo giao diện chính xác như hình bạn cung cấp ---
+# Nạp font Roboto Condensed từ Google Fonts
+st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
+""", unsafe_allow_html=True)
+    div.stButton {
+        background-color: #FFFDF1 !important;
+        padding: 0 !important;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    div.stButton > button:first-child {
+        background-color: #A02B2B;
+        color: white;
+        border-radius: 12px;
+        height: 3.5em;
+        width: 100%;
+        max-width: 500px;
+        display: inline-block;
+        font-size: 1.6em !important;
+        font-weight: 800 !important;
+        font-family: 'Roboto Condensed', sans-serif !important;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        transition: all 0.3s ease-in-out;
+        letter-spacing: 0.5px;
+        white-space: normal;
+        line-height: 1.3;
+        cursor: pointer;
+    }
+
+    div.stButton > button:first-child:hover {
+        background-color: #861d1f;
+        transform: scale(1.02);
+    }
+
+
+
+
 st.markdown(
     """
-     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 /* Import font Roboto Condensed từ Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
@@ -163,34 +202,6 @@ div[data-testid="stTextArea"] > div:first-child {
     margin: 0 !important;
     padding: 0 !important;
     background-color: transparent !important; /* Đảm bảo nền trong suốt */
-}
-
-/* --- Sửa lỗi nút bấm --- */
-div.stButton {
-    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
-    padding: 0 !important; /* Loại bỏ padding nếu có */
-    margin-top: 30px; /* Khoảng cách với phần trên */
-    margin-bottom: 20px; /* Khoảng cách với phần dưới */
-    text-align: center; /* Căn giữa nút */
-}
-
-div.stButton > button:first-child {
-    background-color: #A02B2B;
-    color: white;
-    border-radius: 12px;
-    height: 3.5em;
-    width: 100%;
-    max-width: 500px;
-    display: inline-block;
-    font-size: 1.6em !important;      /* ép kích thước chữ */
-    font-weight: 800 !important;      /* ép độ đậm */
-    font-family: 'Roboto Condensed', sans-serif !important;  /* ép font */
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    transition: all 0.3s ease-in-out;
-    letter-spacing: 0.5px;
-    white-space: normal;
-    line-height: 1.3;
 }
 
 /* Tiêu đề cho phần kết quả */
