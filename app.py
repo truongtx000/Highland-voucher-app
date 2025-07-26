@@ -7,12 +7,12 @@ st.set_page_config(page_title="Highland Voucher App", layout="centered")
 # --- CSS tùy chỉnh ---
 st.markdown("""
     <style>
-                /* Toàn bộ nền app */
-        .main {
-            background-color: #FFFDF1;
+        /* Đổi màu nền toàn bộ trang */
+        html, body, .stApp {
+            background-color: #FFFDF1 !important;
         }
 
-        /* Phần nhóm nhập liệu */
+        /* Layout hàng ngang cho phần nhập */
         .flex-row {
             display: flex;
             align-items: center;
@@ -38,51 +38,16 @@ st.markdown("""
             color: #555;
         }
 
-        /* Tùy chỉnh vùng nhập liệu */
+        /* Style cho textarea */
         textarea {
             background-color: white !important;
             border: 2px solid #C29A5F !important;
             border-radius: 10px !important;
             padding: 10px !important;
         }
-
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
-
-        html, body, [class*="css"]  {
-            font-family: 'Roboto Condensed', sans-serif;
-            background-color: #FFFDF1;
-        }
-
-        .main > div {
-            padding: 0 !important;
-        }
-
-        .title-container {
-            background-color: #AA1F24;
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem 1rem;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-
-        .block-container {
-            padding-top: 0 !important;
-        }
-
-        .input-card {
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 0 0 8px 8px;
-        }
-
-        .submit-button button {
-            background-color: #AA1F24 !important;
-            color: white !important;
-            font-weight: bold;
-        }
     </style>
 """, unsafe_allow_html=True)
+
 
 # --- Tiêu đề ---
 st.markdown("""
