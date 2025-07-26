@@ -81,6 +81,23 @@ st.markdown("""
             background-color: #8A191E;
         }
 
+
+                div.stButton > button:first-child {
+            background-color: #AA1F24;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        div.stButton > button:first-child:hover {
+            background-color: #8A191E;
+        }
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -164,13 +181,13 @@ voucher_input = st.text_area(
 )
 
 
-button_clicked = st.markdown("""
-    <div style="text-align: center; margin-top: 30px;">
-        <form action="#">
-            <button class="custom-button" type="submit">Tính kết quả tối ưu</button>
-        </form>
-    </div>
-""", unsafe_allow_html=True)
+with st.form("submit_form"):
+    submitted = st.form_submit_button("Tính kết quả tối ưu")
+
+    # Nếu người dùng bấm nút
+    if submitted:
+        # 👉 Thực hiện tính toán tại đây
+        st.success("Đã bấm nút! Xử lý dữ liệu tại đây.")
 
 # --- Parse dữ liệu ---
 def parse_items(text):
@@ -250,6 +267,13 @@ def find_optimal_voucher_distribution(items, vouchers):
     return best_solution_details, best_total_cost
 
 # --- Xử lý khi nhấn nút ---
+with st.form("submit_form"):
+    submitted = st.form_submit_button("Tính kết quả tối ưu")
+
+    if submitted:
+        # Gọi hàm xử lý tối ưu ở đây
+        st.success("Đã tính xong kết quả!")
+
 st.markdown("<div class='submit-button'>", unsafe_allow_html=True)
 if st.button("Tính kết quả tối ưu"):
     items = parse_items(items_input)
