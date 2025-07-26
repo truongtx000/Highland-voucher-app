@@ -215,15 +215,19 @@ div.stButton > button:first-child:hover {
 }
 
 /* Container cho mỗi nhóm kết quả (voucher + món ăn) */
-.result-group {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 1px 3px rgba(0,0,0,.05);
-}
-
+ .result-group {
+            margin-top: 20px;
+            padding: 10px 0;
+            background-color: transparent; /* ✅ Bỏ nền trắng */
+            border: none; /* ✅ Không viền */
+        }
+        .result-group-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .result-item {
+            margin-left: 10px;
+        }
 .result-group-title {
     font-weight: bold;
     color: #424242; /* Màu xám đậm */
