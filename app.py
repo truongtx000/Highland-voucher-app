@@ -9,11 +9,11 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 st.markdown(
     """
 <style>
-/* Bỏ @import font Roboto Condensed - dùng font hệ thống mặc định */
-
-/* Đặt màu nền chung cho toàn bộ trang */
+/* Đặt font-family hệ thống cho toàn bộ ứng dụng để đảm bảo tính nhất quán */
+/* Có thể thử các font sau: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif */
 body {
     background-color: #FFFDF1; /* Màu vàng nhạt / trắng kem */
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Font hệ thống mặc định */
 }
 
 /* Ẩn Streamlit header và footer mặc định */
@@ -161,14 +161,16 @@ div[data-testid="stTextArea"] > div:first-child {
 }
 
 
-/* --- CSS cho Nút Tùy Chỉnh (button_custom) --- */
-.custom-button-container {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 20px;
+/* --- CSS cho Nút Streamlit đã được tinh chỉnh --- */
+div.stButton {
+    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
+    padding: 0 !important; /* Loại bỏ padding nếu có */
+    margin-top: 30px; /* Khoảng cách với phần trên */
+    margin-bottom: 20px; /* Khoảng cách với phần dưới */
+    text-align: center; /* Căn giữa nút */
 }
 
-.custom-button {
+div.stButton > button:first-child {
     background-color: #A02B2B; /* Màu đỏ đậm */
     color: white;
     border-radius: 12px; /* Bo góc */
@@ -178,8 +180,8 @@ div[data-testid="stTextArea"] > div:first-child {
     display: inline-flex; /* Dùng flexbox để căn giữa nội dung */
     justify-content: center; /* Căn giữa ngang */
     align-items: center; /* Căn giữa dọc */
-    font-size: 1.3em; 
-    font-weight: bold; /* Dùng 'bold' hoặc 700/800/900 để đảm bảo đậm nhất có thể */
+    font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
+    font-weight: 800 !important; /* Rất đậm, dùng !important - ĐÂY LÀ PHẦN HY VỌNG SẼ LÀM ĐẬM */
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
@@ -188,21 +190,19 @@ div[data-testid="stTextArea"] > div:first-child {
     line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
     cursor: pointer;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
-    /* Loại bỏ font-family ở đây để dùng font mặc định */
+    
+    /* VẪN ĐỂ FONT-FAMILY Ở ĐÂY NHƯ MỘT BIỆN PHÁP PHÒNG NGỪA */
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif !important; 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: 0 20px; /* Thêm padding ngang để text không sát viền */
 }
 
-.custom-button:hover {
+/* Hiệu ứng khi di chuột qua nút */
+div.stButton > button:first-child:hover {
     background-color: #861d1f; /* Màu đỏ sẫm hơn khi hover */
     transform: scale(1.02); /* Nút to lên một chút */
     box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
-}
-
-.custom-button-icon {
-    margin-right: 10px; /* Khoảng cách giữa icon và text */
-    font-size: 1.2em; /* Kích thước icon */
 }
 
 
@@ -466,48 +466,10 @@ with st.container(border=False):
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
-    # Nút tính toán được tạo bằng HTML/Markdown tùy chỉnh
-    st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
-    # Sử dụng st.empty để tạo một placeholder cho nút, sau đó update bằng HTML
-    # Điều này cần thiết để Streamlit nhận diện click event
-    button_placeholder = st.empty()
+    # Nút tính toán (quay lại cách cũ, hy vọng CSS sẽ ăn)
+    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
     
-    # HTML cho nút tùy chỉnh (sử dụng icon từ Font Awesome nếu bạn đã import, hoặc đơn giản là text "✔️")
-    # Để có icon thực sự, bạn cần import Font Awesome vào ứng dụng Streamlit (thêm link CSS vào st.markdown style block)
-    # Ví dụ: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    # Tạm thời dùng emoji unicode hoặc text để đơn giản
-    button_html = f"""
-        <button class="custom-button" onclick="window.parent.document.getElementById('{button_placeholder.id}').click()">
-            <span class="custom-button-icon">✅</span> <strong>TÍNH KẾT QUẢ TỐI ƯU</strong>
-        </button>
-    """
-    
-    # Hiển thị nút HTML. st.button sẽ vẫn được sử dụng để bắt sự kiện click
-    # và ẩn đi bằng CSS nếu muốn (hoặc bỏ hẳn div.stButton style nếu dùng cách này).
-    # Tuy nhiên, để bắt sự kiện click trên custom button, chúng ta cần một chút JavaScript trick.
-    # Cách tốt nhất là dùng st.form để bọc và dùng st.form_submit_button
-    # HOẶC, nếu không dùng form, chúng ta phải dựa vào mẹo JavaScript.
-    # Với Streamlit hiện tại, việc tạo button HTML tùy chỉnh mà vẫn bắt được sự kiện Python là phức tạp.
-    # Nút st.button thông thường là cách tốt nhất để bắt sự kiện Python.
-    # Do đó, chúng ta sẽ quay lại với st.button, nhưng sẽ cố gắng ép font-weight mạnh nhất có thể.
-
-    # --- KHẮC PHỤC CUỐI CÙNG CHO NÚT (Quay lại st.button nhưng tối ưu CSS) ---
-    # Nếu font-weight không được áp dụng, hãy thử một font khác phổ biến hơn, 
-    # hoặc chấp nhận font mặc định và chỉ đảm bảo 'bold'
-    
-    # Đặt lại CSS cho nút ở đây, bỏ toàn bộ phần custom-button-container và custom-button
-    # và sử dụng lại div.stButton
-    
-    # --- Code để tạo nút (quay lại st.button) ---
-    # Đảm bảo phần CSS cho div.stButton đã được sửa đúng như đề xuất trước
-    # Tức là: bỏ font-family và chỉ giữ font-weight: 800/900/bold
-    
-    # Cần một biến để bắt sự kiện click của button
-    submitted = st.button("✅ Tính kết quả tối ưu")
-    
-    st.markdown('</div>', unsafe_allow_html=True) # Đóng custom-button-container hoặc div của nút
-
-    if submitted: # Thay vì if st.button(...)
+    if st.button("✅ Tính kết quả tối ưu"): # Bỏ Markdown trong label
         items = parse_items(items_input)
         vouchers = parse_vouchers(voucher_input)
 
@@ -537,6 +499,6 @@ with st.container(border=False):
             st.warning("❗ Vui lòng nhập ít nhất 1 món.")
         elif not vouchers:
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
-    st.markdown('</div>', unsafe_allow_html=True) # đóng div.stButton (hoặc .custom-button-container)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
