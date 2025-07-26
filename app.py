@@ -107,11 +107,11 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 }
 
 .input-content h2 {
-    font-size: 1.4em; /* Kích thước chữ tiêu đề */
-    font-weight: bold;
-    color: #333;
-    margin-top: 0px !important; /* Đảm bảo sát với icon, override mọi margin mặc định của h2*/
-    margin-bottom: 5px;
+    font-size: 2.5em; /* Kích thước chữ lớn */
+    font-weight: 900; /* Rất đậm */
+    margin: 0; /* Bỏ margin mặc định */
+    letter-spacing: 0.5px; /* Khoảng cách giữa các chữ cái */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Đổ bóng chữ */
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
