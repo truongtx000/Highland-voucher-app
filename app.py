@@ -136,17 +136,31 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 85px) !important; /* Tính toán chiều rộng để trừ đi khoảng thụt đầu dòng */
-    margin-left: 85px !important; /* Thụt đầu dòng 85px */
+    width: 100% !important; /* Chiếm toàn bộ chiều rộng của cha */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
+    /* LOẠI BỎ margin-left và bất kỳ can thiệp bố cục nào khác */
+    margin-left: 0 !important; 
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
 div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
     min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
+}
+
+/* Đảm bảo các div bao quanh stTextArea không có padding/margin lạ */
+div[data-testid="stTextArea"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important; /* Đảm bảo nền trong suốt */
+}
+
+div[data-testid="stTextArea"] > div:first-child {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important; /* Đảm bảo nền trong suốt */
 }
 
 /* --- Sửa lỗi nút bấm --- */
@@ -460,7 +474,7 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # st.text_area cho items
+    # st.text_area cho items - BỎ MỌI THỤT ĐẦU DÒNG CSS TÙY CHỈNH
     items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
 
     # Phần nhập danh sách voucher
@@ -476,7 +490,7 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # st.text_area cho vouchers
+    # st.text_area cho vouchers - BỎ MỌI THỤT ĐẦU DÒNG CSS TÙY CHỈNH
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
