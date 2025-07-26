@@ -1,3 +1,4 @@
+```python
 import streamlit as st
 from itertools import combinations
 import math
@@ -29,12 +30,13 @@ footer { visibility: hidden; }
 
 /* Vùng chứa nội dung chính để bo góc và đổ bóng cho toàn bộ app */
 .block-container {
-    padding-top: 0rem; /* Giảm padding trên cùng của Streamlit */
-    padding-bottom: 0rem; /* Giảm padding dưới cùng */
-    padding-left: 0rem; /* Giảm padding trái */
-    padding-right: 0rem; /* Giảm padding phải */
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    padding-left: 20px; /* THAY ĐỔI: Thêm padding trái */
+    padding-right: 20px; /* THAY ĐỔI: Thêm padding phải */
     max-width: 700px; /* Giới hạn chiều rộng để giống ảnh */
     margin: 0 auto; /* Căn giữa block container */
+    box-sizing: border-box; /* Bao gồm padding trong kích thước */
 }
 
 /* Loại bỏ các box container mặc định của Streamlit nếu chúng được sử dụng */
@@ -58,30 +60,24 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
 }
 
-.header-title {
+/* THAY ĐỔI: Tiêu đề chính thành một thẻ h1 duy nhất */
+.header-bg h1 {
     font-size: 2.5em; /* Kích thước chữ lớn */
     font-weight: 900; /* Rất đậm */
-    margin-bottom: 5px;
+    margin: 0; /* Bỏ margin mặc định */
     letter-spacing: 0.5px; /* Khoảng cách giữa các chữ cái */
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Đổ bóng chữ */
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
-/* Tiêu đề phụ trong header */
-.header-subtitle {
-    font-size: 1.8em;
-    font-weight: 600;
-    margin-top: 0;
-    opacity: 0.9; /* Hơi mờ hơn tiêu đề chính */
-    font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
-}
 
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
     display: flex; /* Dùng flexbox để căn chỉnh icon và nội dung */
     align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử */
     margin-bottom: 25px; /* Khoảng cách giữa các section */
-    padding: 0 20px; /* Padding ngang để nội dung không sát lề */
+    /* padding: 0 20px; Bỏ padding ở đây vì đã có ở .block-container */
     box-sizing: border-box;
 }
 
@@ -109,14 +105,13 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 /* Nội dung text và textbox của phần nhập liệu (tiêu đề và mô tả) */
 .input-content {
     flex-grow: 1; /* Cho phép nội dung này mở rộng */
-    /* Không đặt width cứng ở đây để flexbox tự điều chỉnh */
 }
 
 .input-content h2 {
     font-size: 1.4em; /* Kích thước chữ tiêu đề */
     font-weight: bold;
     color: #333;
-    margin-top: 0px; /* Đảm bảo sát với icon - Đã chỉnh */
+    margin-top: 0px; /* THAY ĐỔI: Đảm bảo sát với icon */
     margin-bottom: 5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
     line-height: 1.2; /* Tăng line-height cho tiêu đề */
@@ -135,39 +130,30 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 70px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái (cộng thêm 70px của icon-circle + margin-right) */
-    margin-left: 70px; /* THAY ĐỔI: Đẩy textbox sang phải bằng chiều rộng của icon + margin */
+    width: calc(100% - 90px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái */
+    margin-left: 85px; /* THAY ĐỔI: Đẩy textbox sang phải nhiều hơn (icon_width + margin_right + thêm khoảng cách) */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
-    min-height: 150px; /* THAY ĐỔI: Chiều cao tối thiểu, tăng lên */
+    min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
 }
 
-/* Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
-/* Đây là class được Streamlit tạo cho div bọc quanh textarea */
-div[data-testid="stTextArea"].st-emotion-cache-1oy39z6 > div:first-child {
-    background-color: #FFFDF1; /* Đặt màu nền trùng với body */
+/* THAY ĐỔI: Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
+/* Selector này nhắm vào container của text area Streamlit để làm mất màu xám */
+div[data-testid="stTextArea"] > div:first-child > div:first-child {
+    background-color: #FFFDF1 !important; /* Màu nền trùng với body */
+    border: none !important; /* Bỏ viền */
+    box-shadow: none !important; /* Bỏ đổ bóng */
     padding: 0 !important; /* Xóa padding nếu có */
-    border: none !important; /* Xóa border */
-    box-shadow: none !important; /* Xóa đổ bóng */
 }
 
 
-/* Cho text area của voucher nhỏ lại một chút (nếu cần) */
-/* Cần điều chỉnh selector chính xác nếu muốn áp dụng riêng cho voucher text area.
-   Hiện tại, nó áp dụng cho tất cả st.text_area.
-   Nếu bạn muốn chỉ thay đổi cho voucher, cần tìm ra cách chọn riêng nó.
-   Ví dụ, có thể dùng st.text_area(key="voucher_input_area_key", ...) rồi dùng CSS selector dựa vào key đó
-   nhưng Streamlit không tạo ra ID/class dễ dàng từ key.
-   Cách khác là dùng :nth-of-type hoặc điều chỉnh height trực tiếp trong Python.
-*/
-/*
-div[data-testid="stVerticalBlock"] > div.st-emotion-cache-1oy39z6:nth-of-type(2) textarea {
-    min-height: 90px;
+/* Cho text area của voucher nhỏ lại một chút */
+/* Dựa vào cấu trúc HTML của Streamlit, đây là cách target text area thứ 2 */
+/* Nếu có nhiều text area, cần điều chỉnh lại để tránh ảnh hưởng không mong muốn */
+div.stTextArea:nth-of-type(2) textarea {
+    min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea */
 }
-*/
-/* Điều chỉnh height của text area voucher trực tiếp trong st.text_area(...) */
-
 
 /* Định dạng cho nút bấm chính */
 div.stButton > button:first-child {
@@ -175,7 +161,7 @@ div.stButton > button:first-child {
     color: white;
     border-radius: 12px; /* Bo góc */
     height: 3.5em; /* Chiều cao nút */
-    width: calc(100% - 40px); /* Chiếm phần lớn chiều rộng, trừ padding */
+    width: calc(100% - 40px); /* Chiếm phần lớn chiều rộng, trừ padding tổng cộng 40px */
     display: block; /* Để căn giữa dễ hơn */
     margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách */
     font-size: 1.3em; /* Cỡ chữ lớn hơn */
@@ -280,18 +266,6 @@ div.stSuccess {
 .stTextArea label {
     display: none;
 }
-
-/* Điều chỉnh lại layout của Streamlit widget để phù hợp với flexbox của input-section */
-/* Đây là class được Streamlit tự động tạo cho div chứa text area, bạn có thể cần kiểm tra lại bằng F12 */
-/* Selector này cố gắng nhắm vào div bên trong st.markdown, chứa text area */
-div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"] div.st-emotion-cache-1oy39z6 > div:first-child > div:nth-child(1) {
-    background-color: transparent !important; /* Làm cho nó trong suốt */
-    border: none !important; /* Xóa border */
-    box-shadow: none !important; /* Xóa đổ bóng */
-    padding: 0 !important; /* Xóa padding */
-    margin: 0 !important; /* Xóa margin */
-}
-
 
 </style>
     """,
@@ -470,10 +444,11 @@ with st.container(border=False):
     st.markdown('<div class="main-container">', unsafe_allow_html=True) # Mở div main-container
 
     # Phần tiêu đề của ứng dụng
-    st.markdown('<div class="header-bg"><h1 class="header-title">Tiết Kiệm Highland cùng voucher</h1></div>', unsafe_allow_html=True)
+    # THAY ĐỔI: Sử dụng một thẻ h1 duy nhất
+    st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland Cùng Voucher</h1></div>', unsafe_allow_html=True)
 
-    # Đường dẫn tới ảnh trên GitHub (thay thế bằng repo của bạn nếu khác)
-    # Dựa trên ảnh bạn cung cấp, đây là đường dẫn raw mặc định cho repo của bạn
+    # Đường dẫn tới ảnh trên GitHub (THAY THẾ BẰNG URL BẠN ĐÃ CUNG CẤP)
+    # Đảm bảo đây là đường dẫn RAW chính xác tới file ảnh của bạn trên GitHub
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
@@ -530,3 +505,4 @@ with st.container(border=False):
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
 
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
+```
