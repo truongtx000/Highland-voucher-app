@@ -128,8 +128,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 95px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái (70px icon + 15px margin-right + 10px thêm)*/
-    margin-left: 85px; /* THAY ĐỔI: Đẩy textbox sang phải nhiều hơn (icon_width + margin_right)*/
+    width: calc(100% - 95px); /* Giảm chiều rộng để có khoảng trống bên trái (70px icon + 15px margin-right + 10px thêm)*/
+    margin-left: 85px; /* Đẩy textbox sang phải nhiều hơn (icon_width + margin_right)*/
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
@@ -162,7 +162,7 @@ div.stButton > button:first-child {
     height: 3.5em; /* Chiều cao nút */
     width: calc(100% - 40px); /* Chiếm phần lớn chiều rộng, trừ padding tổng cộng 40px */
     display: block; /* Để căn giữa dễ hơn */
-    margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách */
+    margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách. THAY ĐỔI: Giảm margin-bottom */
     font-size: 1.3em; /* Cỡ chữ lớn hơn */
     font-weight: bold;
     border: none;
@@ -185,7 +185,7 @@ div.stButton > button:first-child:hover {
     font-size: 1.8em;
     font-weight: bold;
     color: #333; /* Màu chữ đen */
-    margin-top: 40px; /* Khoảng cách với nút bấm */
+    margin-top: 20px; /* THAY ĐỔI: Giảm margin-top để sát hơn với nút bấm */
     margin-bottom: 10px; /* Giảm margin-bottom để sát hơn với kết quả*/
     border-bottom: 2px solid #C29A5F; /* Đường gạch chân màu nâu */
     padding-bottom: 10px;
@@ -308,4 +308,201 @@ def parse_vouchers(text):
                 })
             except ValueError:
                 st.warning(f"❗ Lỗi định dạng voucher ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
-                return [] # Trả về rỗng để báo hiệu
+                return [] # Trả về rỗng để báo hiệu lỗi
+        elif line.strip():
+            st.warning(f"❗ Định dạng không đúng ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
+            return [] # Trả về rỗng để báo hiệu lỗi
+    return vouchers
+
+# --- Thuật toán tìm kiếm tối ưu toàn cục ---
+@st.cache_data(show_spinner="Đang tìm kiếm giải pháp tối ưu nhất...")
+def find_optimal_voucher_distribution(items, vouchers):
+    """
+    Tìm cách phân bổ món ăn vào các voucher để tổng chi phí là thấp nhất.
+    Sử dụng thuật toán backtracking để thử mọi cách kết hợp.
+    """
+    
+    best_overall_cost = float('inf')
+    best_overall_solution = []
+
+    # Tạo một danh sách các index của món ăn để dễ dàng thao tác
+    item_indices = list(range(len(items)))
+    
+    # Chuyển danh sách voucher thành dictionary để truy cập theo ID nhanh hơn
+    # (Vì trong quá trình đệ quy, current_voucher_index sẽ dùng để truy cập voucher)
+    vouchers_dict = {v["id"]: v for v in vouchers}
+
+
+    # Hàm đệ quy để thử mọi cách phân chia món ăn cho các voucher
+    # remaining_item_indices: tuple các chỉ số món ăn còn lại (dùng tuple để hashable cho cache nếu cần, hoặc để giữ nguyên thứ tự)
+    # current_voucher_index: chỉ số voucher đang xét
+    # current_groups_info: danh sách các nhóm món ăn đã được gán cho voucher
+    def find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index, current_groups_info):
+        nonlocal best_overall_cost, best_overall_solution
+
+        # Nếu đã xét hết tất cả các voucher
+        if current_voucher_index == len(vouchers):
+            remaining_cost = sum(items[i]["price"] for i in remaining_item_indices_tuple)
+            final_cost = sum(g["final"] for g in current_groups_info) + remaining_cost
+            
+            # Tạo một bản sao của solution để lưu trữ
+            current_solution_snapshot = list(current_groups_info)
+            # Nếu có các món còn lại, thêm vào nhóm "không voucher"
+            if remaining_item_indices_tuple:
+                remaining_items_details = [items[i] for i in remaining_item_indices_tuple]
+                current_solution_snapshot.append({
+                    "voucher": None,
+                    "items": remaining_items_details,
+                    "total": remaining_cost,
+                    "final": remaining_cost
+                })
+
+            if final_cost < best_overall_cost:
+                best_overall_cost = final_cost
+                best_overall_solution = current_solution_snapshot
+            
+            return
+
+        current_voucher = vouchers_dict.get(current_voucher_index)
+        if not current_voucher: # Nếu không tìm thấy voucher với index này (ví dụ, list vouchers rỗng)
+            # Tiếp tục với voucher tiếp theo mà không sử dụng voucher hiện tại
+            find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index + 1, list(current_groups_info))
+            return
+
+
+        # Option 1: Không sử dụng voucher hiện tại cho bất kỳ món nào
+        # Chuyển sang voucher tiếp theo
+        find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index + 1, list(current_groups_info))
+
+
+        # Option 2: Sử dụng voucher hiện tại cho một tập hợp các món ăn
+        # Duyệt qua tất cả các tổ hợp con của các món ăn còn lại cho voucher hiện tại
+        for r in range(1, len(remaining_item_indices_tuple) + 1):
+            for combo_indices in combinations(remaining_item_indices_tuple, r):
+                selected_items_for_voucher = [items[i] for i in combo_indices]
+                group_total = sum(item["price"] for item in selected_items_for_voucher)
+
+                if group_total >= current_voucher["min_total"]:
+                    discounted_group_cost = group_total - current_voucher["discount"]
+                    
+                    # Tạo trạng thái mới
+                    new_remaining_item_indices = tuple(sorted([i for i in remaining_item_indices_tuple if i not in combo_indices]))
+                    new_groups_info = list(current_groups_info)
+                    new_groups_info.append({
+                        "voucher": current_voucher,
+                        "items": selected_items_for_voucher,
+                        "total": group_total,
+                        "final": discounted_group_cost
+                    })
+
+                    # Tiếp tục đệ quy với các món còn lại và voucher tiếp theo
+                    find_best_combination_recursive(new_remaining_item_indices, current_voucher_index + 1, new_groups_info)
+
+    # Bắt đầu tìm kiếm với tất cả các món và voucher đầu tiên
+    # Chuyển remaining_item_indices thành tuple để đảm bảo hashable nếu cần cho cache và tránh thay đổi trong đệ quy
+    find_best_combination_recursive(tuple(sorted(item_indices)), 0, [])
+
+    # Tổng kết chi phí gốc
+    original_total = sum(item["price"] for item in items)
+    
+    # Sắp xếp lại giải pháp theo thứ tự các nhóm đã được áp dụng hoặc không có voucher
+    final_solution_groups = []
+    
+    # Thêm các nhóm có voucher trước
+    for group in best_overall_solution:
+        if group["voucher"]:
+            final_solution_groups.append(group)
+    
+    # Thêm nhóm không có voucher (nếu có)
+    # Cần kiểm tra lại để đảm bảo không bị trùng lặp hoặc thiếu sót món
+    assigned_item_ids_in_solution = set()
+    for group in best_overall_solution:
+        for item in group["items"]:
+            assigned_item_ids_in_solution.add(item["id"])
+    
+    remaining_unassigned_items_at_end = [item for item in items if item["id"] not in assigned_item_ids_in_solution]
+
+    if remaining_unassigned_items_at_end:
+        final_solution_groups.append({
+            "voucher": None,
+            "items": remaining_unassigned_items_at_end,
+            "total": sum(item["price"] for item in remaining_unassigned_items_at_end),
+            "final": sum(item["price"] for item in remaining_unassigned_items_at_end)
+        })
+    
+    # Sắp xếp lại các nhóm để nhóm có voucher hiển thị trước, theo thứ tự giảm giá
+    # (Đảm bảo nhóm không voucher luôn ở cuối)
+    final_solution_groups.sort(key=lambda g: (0 if g["voucher"] else 1, -g["voucher"]["discount"] if g["voucher"] else 0))
+
+
+    return final_solution_groups, best_overall_cost
+
+# --- Giao diện và Hiển thị kết quả ---
+# Đặt nội dung chính trong một container để dễ dàng áp dụng CSS .main-container
+# Sử dụng st.container không border để tự tạo div.main-container bên trong
+with st.container(border=False):
+    st.markdown('<div class="main-container">', unsafe_allow_html=True) # Mở div main-container
+
+    # Phần tiêu đề của ứng dụng
+    # THAY ĐỔI: Sử dụng một thẻ h1 duy nhất
+    st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland<br>Cùng Voucher</h1></div>', unsafe_allow_html=True)
+
+    # Đường dẫn tới ảnh trên GitHub (Đã cập nhật theo URL bạn cung cấp)
+    # Đảm bảo đây là đường dẫn RAW chính xác tới file ảnh của bạn trên GitHub
+    GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
+    COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
+    VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
+
+    # Phần nhập danh sách món
+    st.markdown('<div class="input-section">', unsafe_allow_html=True)
+    st.markdown(f'<div class="icon-circle"><img src="{COFFEE_ICON_URL}" alt="Coffee Icon"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-content">', unsafe_allow_html=True)
+    st.markdown('<h2>Nhập danh sách món</h2>', unsafe_allow_html=True)
+    st.markdown('<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>', unsafe_allow_html=True)
+    items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
+    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
+
+    # Phần nhập danh sách voucher
+    st.markdown('<div class="input-section">', unsafe_allow_html=True)
+    st.markdown(f'<div class="icon-circle"><img src="{VOUCHER_ICON_URL}" alt="Voucher Icon"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-content">', unsafe_allow_html=True)
+    st.markdown('<h2>Nhập danh sách voucher</h2>', unsafe_allow_html=True)
+    st.markdown('<p>Nhập mỗi voucher theo dạng: min_price, discount</p>', unsafe_allow_html=True)
+    voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
+    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
+
+    # Nút tính toán
+    if st.button("Tính kết quả tối ưu"):
+        items = parse_items(items_input)
+        vouchers = parse_vouchers(voucher_input)
+
+        # GÓI GỌN TOÀN BỘ PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY, CHỈ HIỂN THỊ KHI CÓ DỮ LIỆU HỢP LỆ
+        if items and vouchers:
+            result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
+
+            # Đây là phần hiển thị kết quả
+            st.markdown('<h2 class="results-header">📄 KẾT QUẢ TỐI ƯU</h2>', unsafe_allow_html=True)
+            
+            original_total = sum(item["price"] for item in items)
+            total_discount = original_total - final_cost
+            
+            for idx, group in enumerate(result_groups, 1):
+                st.markdown('<div class="result-group">', unsafe_allow_html=True)
+                if group["voucher"]:
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: {group["voucher"]["label"]} (Tổng: {group["total"]}k → {group["final"]}k)</p>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: Không dùng voucher (Tổng: {group["total"]}k)</p>', unsafe_allow_html=True)
+                
+                for item in group["items"]:
+                    st.markdown(f'<p class="result-item">- {item["name"]} ({item["price"]}k)</p>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True) # Đóng div result-group
+            
+            st.markdown(f'<p class="final-cost">Tổng chi phí sau giảm giá: <strong>{final_cost}k</strong> <span class="discount-amount">(giảm được {total_discount}k)</span></p>', unsafe_allow_html=True)
+        elif not items and not voucher_input.strip(): # Trường hợp cả 2 input đều rỗng
+             st.warning("❗ Vui lòng nhập thông tin món và voucher để bắt đầu.")
+        elif not items: # Chỉ món rỗng
+            st.warning("❗ Vui lòng nhập ít nhất 1 món.")
+        elif not vouchers: # Chỉ voucher rỗng
+            st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
+
+    st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
