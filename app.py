@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from itertools import combinations
 import math
@@ -505,4 +504,3 @@ with st.container(border=False):
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
 
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
-```
