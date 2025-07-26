@@ -9,8 +9,8 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 st.markdown(
     """
 <style>
-/* Import font Roboto Condensed từ Google Fonts - THÊM FONT-WEIGHT 800 */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap');
+/* Import font Roboto Condensed từ Google Fonts - Đảm bảo bao gồm weight 800 và 900 */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800;900&display=swap');
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
@@ -69,6 +69,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
+
 
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
@@ -142,6 +143,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: white; /* Nền trắng cho textbox */
     margin-left: 0 !important; 
     margin-top: 0 !important; 
+    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font cho textarea */
+    font-weight: 400 !important; /* Mặc định cho textarea */
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
@@ -191,6 +194,9 @@ div.stButton > button:first-child {
     line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
     cursor: pointer;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
+    /* Thêm thuộc tính này nếu vẫn không đổi font */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Hiệu ứng khi di chuột qua nút */
@@ -286,7 +292,6 @@ div.stSuccess {
 )
 
 # --- Xử lý dữ liệu đầu vào ---
-# Sử dụng cache để tránh parse lại dữ liệu nếu input không đổi
 @st.cache_data
 def parse_items(text):
     lines = text.strip().split("\n")
