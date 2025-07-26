@@ -24,7 +24,7 @@ footer { visibility: hidden; }
 
 /* Container chính của Streamlit, điều chỉnh padding để nội dung sát hơn */
 .stApp {
-    background-color: #FFFDF1; /* Đảm bảo nền app trùng với body */
+    background-color: #000000; /* Đảm bảo nền app trùng với body */
 }
 
 /* Vùng chứa nội dung chính để bo góc và đổ bóng cho toàn bộ app */
