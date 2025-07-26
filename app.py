@@ -168,12 +168,11 @@ div.stButton > button:first-child {
     color: white;
     border-radius: 12px; /* Bo góc */
     height: 3.5em; /* Chiều cao nút */
-    width: 100%; /* Chiếm phần lớn chiều rộng, trừ padding tổng cộng 40px */
+    width: calc(100% - 40px); /* Chiếm phần lớn chiều rộng, trừ padding tổng cộng 40px */
     display: block; /* Để căn giữa dễ hơn */
     margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách. Đã điều chỉnh margin-bottom*/
     font-size: 1.3em; /* Cỡ chữ lớn hơn */
     font-weight: bold;
-    font-color: #FFFFFF;
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
@@ -461,18 +460,12 @@ with st.container(border=False):
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
 
     # Phần nhập danh sách món
-    # Phần nhập danh sách món
     st.markdown('<div class="input-section">', unsafe_allow_html=True)
     st.markdown(f'<div class="icon-circle"><img src="{COFFEE_ICON_URL}" alt="Coffee Icon"></div>', unsafe_allow_html=True)
     st.markdown('<div class="input-content">', unsafe_allow_html=True)
     st.markdown('<h2>Nhập danh sách món</h2>', unsafe_allow_html=True)
     st.markdown('<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>', unsafe_allow_html=True)
     st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
-
-    # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
-    st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
-    items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
-    st.markdown('</div>', unsafe_allow_html=True) # Đóng div textarea-wrapper
 
     # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
     st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
