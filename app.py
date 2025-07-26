@@ -122,7 +122,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
-/* THAY ĐỔI: Container bọc quanh st.text_area để điều khiển thụt vào */
+/* Container bọc quanh st.text_area để điều khiển thụt vào */
 .textarea-wrapper {
     margin-left: 85px; /* Đẩy toàn bộ textbox sang phải (70px icon + 15px margin-right) */
     width: calc(100% - 85px); /* Chiều rộng còn lại sau khi thụt vào */
@@ -137,7 +137,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
     width: 100% !important; /* Chiếm toàn bộ chiều rộng của .textarea-wrapper */
-    margin-left: 0 !important; /* Đảm bảo không có margin-left thừa từ Streamlit */
+    margin-left: 0 !important; /* Đảm bảo không có internal margin */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
@@ -146,12 +146,19 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 
 /* THAY ĐỔI: Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
 /* Selector này nhắm vào container của text area Streamlit để làm mất màu xám */
-div[data-testid="stTextArea"] > div:first-child > div:first-child {
+div[data-testid="stTextArea"] > div:first-child > div:first-child, /* Cho text areas inside a form */
+div.stTextArea > div:first-child > div:first-child { /* Cho text areas outside a form */
     background-color: #FFFDF1 !important; /* Màu nền trùng với body*/
     border: none !important; /* Bỏ viền */
     box-shadow: none !important; /* Bỏ đổ bóng */
     padding: 0 !important; /* Xóa padding nếu có */
     margin: 0 !important; /* Xóa margin */
+}
+
+/* Cũng target parent trực tiếp của textarea để loại bỏ padding/margin không mong muốn */
+div[data-testid="stTextArea"] > div:first-child {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 
@@ -460,12 +467,17 @@ with st.container(border=False):
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
 
     # Phần nhập danh sách món
-    st.markdown('<div class="input-section">', unsafe_allow_html=True)
-    st.markdown(f'<div class="icon-circle"><img src="{COFFEE_ICON_URL}" alt="Coffee Icon"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="input-content">', unsafe_allow_html=True)
-    st.markdown('<h2>Nhập danh sách món</h2>', unsafe_allow_html=True)
-    st.markdown('<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>', unsafe_allow_html=True)
-    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
+    st.markdown(f"""
+        <div class="input-section">
+            <div class="icon-circle">
+                <img src="{COFFEE_ICON_URL}" alt="Coffee Icon">
+            </div>
+            <div class="input-content">
+                <h2>Nhập danh sách món</h2>
+                <p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
     # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
     st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
@@ -473,12 +485,17 @@ with st.container(border=False):
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div textarea-wrapper
 
     # Phần nhập danh sách voucher
-    st.markdown('<div class="input-section">', unsafe_allow_html=True)
-    st.markdown(f'<div class="icon-circle"><img src="{VOUCHER_ICON_URL}" alt="Voucher Icon"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="input-content">', unsafe_allow_html=True)
-    st.markdown('<h2>Nhập danh sách voucher</h2>', unsafe_allow_html=True)
-    st.markdown('<p>Nhập mỗi voucher theo dạng: min_price, discount</p>', unsafe_allow_html=True)
-    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
+    st.markdown(f"""
+        <div class="input-section">
+            <div class="icon-circle">
+                <img src="{VOUCHER_ICON_URL}" alt="Voucher Icon">
+            </div>
+            <div class="input-content">
+                <h2>Nhập danh sách voucher</h2>
+                <p>Nhập mỗi voucher theo dạng: min_price, discount</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
     # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
     st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
@@ -488,35 +505,3 @@ with st.container(border=False):
     # Nút tính toán
     if st.button("Tính kết quả tối ưu"):
         items = parse_items(items_input)
-        vouchers = parse_vouchers(voucher_input)
-
-        # GÓI GỌN TOÀN BỘ PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY, CHỈ HIỂN THỊ KHI CÓ DỮ LIỆU HỢP LỆ
-        if items and vouchers:
-            result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
-
-            # Đây là phần hiển thị kết quả
-            st.markdown('<h2 class="results-header">📄 KẾT QUẢ TỐI ƯU</h2>', unsafe_allow_html=True)
-            
-            original_total = sum(item["price"] for item in items)
-            total_discount = original_total - final_cost
-            
-            for idx, group in enumerate(result_groups, 1):
-                st.markdown('<div class="result-group">', unsafe_allow_html=True)
-                if group["voucher"]:
-                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: {group["voucher"]["label"]} (Tổng: {group["total"]}k → {group["final"]}k)</p>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: Không dùng voucher (Tổng: {group["total"]}k)</p>', unsafe_allow_html=True)
-                
-                for item in group["items"]:
-                    st.markdown(f'<p class="result-item">- {item["name"]} ({item["price"]}k)</p>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True) # Đóng div result-group
-            
-            st.markdown(f'<p class="final-cost">Tổng chi phí sau giảm giá: <strong>{final_cost}k</strong> <span class="discount-amount">(giảm được {total_discount}k)</span></p>', unsafe_allow_html=True)
-        elif not items and not voucher_input.strip(): # Trường hợp cả 2 input đều rỗng
-             st.warning("❗ Vui lòng nhập thông tin món và voucher để bắt đầu.")
-        elif not items: # Chỉ món rỗng
-            st.warning("❗ Vui lòng nhập ít nhất 1 món.")
-        elif not vouchers: # Chỉ voucher rỗng
-            st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
-
-    st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
