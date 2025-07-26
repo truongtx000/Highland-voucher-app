@@ -1,96 +1,105 @@
 import streamlit as st
-from PIL import Image
 
-# === CSS STYLING ===
+# ======== Custom CSS =========
 st.markdown("""
     <style>
         body {
-            background-color: #FFFDF1;
+            background-color: #FFFDF1 !important;
         }
-        .main {
-            background-color: #FFFDF1;
-        }
-        .title-section {
-            background-color: #AA1F24;
-            padding: 40px 0 25px 0;
-            text-align: center;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            border-radius: 0;
-            margin-bottom: 30px;
-        }
-        .input-block {
-            background-color: #FFF9E7;
-            border-radius: 20px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-        }
-        .input-block img {
-            width: 60px;
-            height: 60px;
-        }
-        .input-text {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .block-container {
+            background-color: #FFFDF1 !important;
         }
         textarea {
-            background-color: white;
+            background-color: white !important;
             border: 2px solid #C29A5F !important;
             border-radius: 10px !important;
+            padding: 10px !important;
         }
-        div.stButton > button:first-child {
+        .custom-button {
             background-color: #AA1F24;
             color: white;
             font-weight: bold;
-            padding: 15px;
-            font-size: 20px;
+            font-size: 22px;
+            padding: 12px 36px;
             border: none;
-            border-radius: 15px;
+            border-radius: 18px;
+            cursor: pointer;
             width: 100%;
-            margin-top: 20px;
         }
-        div.stButton > button:first-child:hover {
-            background-color: #8A191E;
+        .custom-button:hover {
+            background-color: #8e1a1d;
+        }
+        .title-container {
+            background-color: #AA1F24;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            border-radius: 0;
+        }
+        .input-box {
+            background-color: #FFF9E8;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .input-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .input-header img {
+            width: 48px;
+            height: 48px;
+        }
+        .input-header-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .input-subtitle {
+            font-size: 16px;
+            margin-top: -6px;
+            color: #444;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# === TITLE ===
-st.markdown('<div class="title-section">Tiết Kiệm Highland<br>Cùng Voucher</div>', unsafe_allow_html=True)
+# ======== Title ========
+st.markdown('<div class="title-container">Tiết Kiệm Highland<br>Cùng Voucher</div>', unsafe_allow_html=True)
 
-# === INPUT BLOCK 1 ===
-st.markdown("""
-<div class="input-block">
-    <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/coffee.png"/>
-    <div class="input-text">
-        <div style="font-weight: 700; font-size: 20px">Nhập danh sách món</div>
-        <div style="color: #555">Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</div>
+# ======== Input Form ========
+with st.form("main_form"):
+    # --- Nhập danh sách món ---
+    st.markdown("""
+    <div class="input-box">
+        <div class="input-header">
+            <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/coffee.png">
+            <div>
+                <div class="input-header-title">Nhập danh sách món</div>
+                <div class="input-subtitle">Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</div>
+            </div>
+        </div>
     </div>
-</div>
-""", unsafe_allow_html=True)
-menu_input = st.text_area("", key="menu", height=150, label_visibility="collapsed")
+    """, unsafe_allow_html=True)
+    menu_text = st.text_area("", height=150)
 
-# === INPUT BLOCK 2 ===
-st.markdown("""
-<div class="input-block">
-    <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/voucher.png"/>
-    <div class="input-text">
-        <div style="font-weight: 700; font-size: 20px">Nhập danh sách voucher</div>
-        <div style="color: #555">Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</div>
+    # --- Nhập danh sách voucher ---
+    st.markdown("""
+    <div class="input-box">
+        <div class="input-header">
+            <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/voucher.png">
+            <div>
+                <div class="input-header-title">Nhập danh sách voucher</div>
+                <div class="input-subtitle">Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</div>
+            </div>
+        </div>
     </div>
-</div>
-""", unsafe_allow_html=True)
-voucher_input = st.text_area("", key="voucher", height=150, label_visibility="collapsed")
+    """, unsafe_allow_html=True)
+    voucher_text = st.text_area("", height=120)
 
-# === BUTTON ===
-# Chỉ cho phép 1 form duy nhất trong app
-with st.form(key="main_form"):
+    # --- Submit Button ---
     submitted = st.form_submit_button("Tính kết quả tối ưu")
-
     if submitted:
-        # TODO: Gọi xử lý logic tại đây
-        st.success("Đã xử lý xong!")
+        st.success("✅ Đã xử lý xong!")
+        # TODO: xử lý kết quả tại đây
