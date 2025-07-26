@@ -7,6 +7,45 @@ st.set_page_config(page_title="Highland Voucher App", layout="centered")
 # --- CSS tùy chỉnh ---
 st.markdown("""
     <style>
+                /* Toàn bộ nền app */
+        .main {
+            background-color: #FFFDF1;
+        }
+
+        /* Phần nhóm nhập liệu */
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #FFFDF1;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .flex-row img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .flex-content h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .flex-content p {
+            margin: 0;
+            color: #555;
+        }
+
+        /* Tùy chỉnh vùng nhập liệu */
+        textarea {
+            background-color: white !important;
+            border: 2px solid #C29A5F !important;
+            border-radius: 10px !important;
+            padding: 10px !important;
+        }
+
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 
         html, body, [class*="css"]  {
@@ -89,13 +128,14 @@ st.markdown("""
 # 🧋 Nhập danh sách món
 st.markdown("""
     <div class="flex-row">
-        <img src="https://cdn-icons-png.flaticon.com/512/2935/2935469.png" alt="coffee icon">
+        <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/coffee.png" alt="coffee icon">
         <div class="flex-content">
             <h2>Nhập danh sách món</h2>
             <p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
+
 items_input = st.text_area(
     label="",
     height=150,
@@ -103,16 +143,18 @@ items_input = st.text_area(
     key="items_input_area"
 )
 
+
 # 🎟️ Nhập danh sách voucher
 st.markdown("""
     <div class="flex-row">
-        <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="voucher icon">
+        <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/voucher.png" alt="voucher icon">
         <div class="flex-content">
             <h2>Nhập danh sách voucher</h2>
             <p>Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
+
 voucher_input = st.text_area(
     label="",
     height=100,
