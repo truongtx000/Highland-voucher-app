@@ -7,11 +7,6 @@ import math
 st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="centered")
 
 # --- CSS Tùy Chỉnh để tạo giao diện chính xác như hình bạn cung cấp ---
-# Nạp font Roboto Condensed từ Google Fonts
-st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
-""", unsafe_allow_html=True)
-
 st.markdown(
     """
 <style>
@@ -19,38 +14,42 @@ st.markdown(
 /* Import font Roboto Condensed từ Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
-    div.stButton {
-        background-color: #FFFDF1 !important;
-        padding: 0 !important;
-        margin-top: 30px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
+/* Sửa lỗi nút bấm */
+div.stButton {
+    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
+    padding: 0 !important; /* Loại bỏ padding nếu có */
+    margin-top: 30px; /* Khoảng cách với phần trên */
+    margin-bottom: 20px; /* Khoảng cách với phần dưới */
+    text-align: center; /* Căn giữa nút */
+}
 
-    div.stButton > button:first-child {
-        background-color: #A02B2B;
-        color: white;
-        border-radius: 12px;
-        height: 3.5em;
-        width: 100%;
-        max-width: 500px;
-        display: inline-block;
-        font-size: 1.6em !important;
-        font-weight: 800 !important;
-        font-family: 'Roboto Condensed', sans-serif !important;
-        border: none;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-        transition: all 0.3s ease-in-out;
-        letter-spacing: 0.5px;
-        white-space: normal;
-        line-height: 1.3;
-        cursor: pointer;
-    }
+div.stButton > button:first-child {
+    background-color: #A02B2B; /* Màu đỏ đậm */
+    color: white;
+    border-radius: 12px; /* Bo góc */
+    height: 3.5em; /* Chiều cao nút */
+    width: 90%; /* Điều chỉnh lại width cho an toàn */
+    max-width: 400px; /* Giới hạn chiều rộng tối đa */
+    display: inline-block; /* Để căn giữa với text-align: center */
+    font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
+    font-weight: 800 !important; /* Rất đậm, dùng !important */
+    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font Roboto Condensed, dùng !important */
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    letter-spacing: 0.5px;
+    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
+}
 
-    div.stButton > button:first-child:hover {
-        background-color: #861d1f;
-        transform: scale(1.02);
-    }
+/* Hiệu ứng khi di chuột qua nút */
+div.stButton > button:first-child:hover {
+    background-color: #861d1f; /* Màu đỏ sẫm hơn khi hover */
+    transform: scale(1.02); /* Nút to lên một chút */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
+}
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
