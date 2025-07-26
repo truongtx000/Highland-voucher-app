@@ -9,13 +9,12 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 st.markdown(
     """
 <style>
-/* Import font Roboto Condensed từ Google Fonts - Đảm bảo bao gồm weight 800 và 900 */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800;900&display=swap');
+/* Bỏ @import font Roboto Condensed - dùng font hệ thống mặc định */
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
     background-color: #FFFDF1; /* Màu vàng nhạt / trắng kem */
-    font-family: 'Roboto Condensed', sans-serif; /* Font Roboto Condensed */
+    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA để Streamlit tự quản lý font mặc định */
 }
 
 /* Ẩn Streamlit header và footer mặc định */
@@ -25,6 +24,7 @@ footer { visibility: hidden; }
 /* Container chính của Streamlit, điều chỉnh padding để nội dung sát hơn */
 .stApp {
     background-color: #FFFDF1; /* Đảm bảo nền app trùng với body */
+    /* CŨNG KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
 }
 
 /* Vùng chứa nội dung chính để bo góc và đổ bóng cho toàn bộ app */
@@ -62,11 +62,11 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 /* Tiêu đề chính thành một thẻ h1 duy nhất*/
 .header-bg h1 {
     font-size: 2.5em; /* Kích thước chữ lớn */
-    font-weight: 900; /* Rất đậm */
+    font-weight: 900; /* Rất đậm - Vẫn giữ để font mặc định đậm nhất có thể */
     margin: 0; /* Bỏ margin mặc định */
     letter-spacing: 0.5px; /* Khoảng cách giữa các chữ cái */
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Đổ bóng chữ */
-    font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
@@ -112,7 +112,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     color: #333;
     margin-top: 0px !important; /* Đảm bảo sát với icon, override mọi margin mặc định của h2*/
     margin-bottom: 5px;
-    font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
@@ -143,7 +143,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: white; /* Nền trắng cho textbox */
     margin-left: 0 !important; 
     margin-top: 0 !important; 
-    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font cho textarea */
+    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     font-weight: 400 !important; /* Mặc định cho textarea */
 }
 
@@ -166,7 +166,7 @@ div[data-testid="stTextArea"] > div:first-child {
 }
 
 
-/* --- Sửa lỗi nút bấm (đã tích hợp font-weight 800) --- */
+/* --- Sửa lỗi nút bấm (bỏ font-family, chỉ giữ font-weight) --- */
 div.stButton {
     background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
     padding: 0 !important; /* Loại bỏ padding nếu có */
@@ -184,8 +184,8 @@ div.stButton > button:first-child {
     max-width: 400px; /* Giới hạn chiều rộng tối đa */
     display: inline-block; /* Để căn giữa với text-align: center */
     font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
-    font-weight: 800 !important; /* Rất đậm, dùng !important */
-    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font Roboto Condensed, dùng !important */
+    font-weight: 800 !important; /* Rất đậm, dùng !important (hoặc thử 900, bold) */
+    /* LOẠI BỎ font-family: 'Roboto Condensed', sans-serif !important; */
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
@@ -194,7 +194,6 @@ div.stButton > button:first-child {
     line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
     cursor: pointer;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
-    /* Thêm thuộc tính này nếu vẫn không đổi font */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -218,10 +217,10 @@ div.stButton > button:first-child:hover {
     text-align: center;
     text-transform: uppercase; /* Chữ hoa */
     letter-spacing: 1px;
-    font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
 }
 
-/* Container cho mỗi nhóm kết quả (voucher + món ăn) - Đã sửa theo feedback của bạn */
+/* Container cho mỗi nhóm kết quả (voucher + món ăn) */
 .result-group {
     margin-top: 20px;
     padding: 10px 0;
