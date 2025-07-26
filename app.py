@@ -191,15 +191,6 @@ div.stButton > button:first-child {
     line-height: 1.3;         /* Có thể tăng thêm nếu text dài */
 }
 
-
-/* Hiệu ứng khi di chuột qua nút */
-div.stButton > button:first-child:hover {
-    background-color: #8D2525; /* Màu đỏ sẫm hơn khi hover */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
-    transform: translateY(-2px); /* Nút nhích lên một chút */
-    cursor: pointer; /* Biểu tượng con trỏ khi di chuột */
-}
-
 /* Tiêu đề cho phần kết quả */
 .results-header {
     font-size: 1.8em;
