@@ -39,6 +39,7 @@ footer { visibility: hidden; }
 }
 
 /* Loại bỏ các box container mặc định của Streamlit nếu chúng được sử dụng */
+/* This targets the outer blocks that Streamlit wraps content in */
 div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: none !important;
     box-shadow: none !important;
@@ -144,18 +145,25 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: white; /* Nền trắng cho textbox */
 }
 
-/* THAY ĐỔI: Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
-/* Selector này nhắm vào container của text area Streamlit để làm mất màu xám */
-div[data-testid="stTextArea"] > div:first-child > div:first-child, /* Cho text areas inside a form */
-div.stTextArea > div:first-child > div:first-child { /* Cho text areas outside a form */
-    background-color: #FFFDF1 !important; /* Màu nền trùng với body*/
-    border: none !important; /* Bỏ viền */
-    box-shadow: none !important; /* Bỏ đổ bóng */
-    padding: 0 !important; /* Xóa padding nếu có */
-    margin: 0 !important; /* Xóa margin */
+/* THAY ĐỔI: Nhắm mục tiêu sâu hơn vào các div bao bọc st.text_area để loại bỏ khoảng trắng và nền xám */
+/* Đây là các div nội bộ của Streamlit tạo ra khoảng trắng/nền */
+div[data-testid="stVerticalBlock"] > div[data-testid="stForm"] > div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div:has(textarea),
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div:has(textarea),
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"]:has(textarea) {
+    background-color: #FFFDF1 !important; /* Màu nền trùng với body */
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-/* Cũng target parent trực tiếp của textarea để loại bỏ padding/margin không mong muốn */
+/* Loại bỏ padding và margin của các div bao quanh trực tiếp textarea */
+div[data-testid="stTextArea"] > div:first-child > div:first-child {
+    background-color: #FFFDF1 !important; /* Đảm bảo màu nền cho div này */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 div[data-testid="stTextArea"] > div:first-child {
     padding: 0 !important;
     margin: 0 !important;
@@ -163,8 +171,6 @@ div[data-testid="stTextArea"] > div:first-child {
 
 
 /* Cho text area của voucher nhỏ lại một chút */
-/* Dựa vào cấu trúc HTML của Streamlit, đây là cách target text area thứ 2 (voucher input) */
-/* Cần cẩn thận nếu có thêm nhiều text area khác */
 div.stTextArea:nth-of-type(2) textarea {
     min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
 }
@@ -461,7 +467,7 @@ with st.container(border=False):
     # Phần tiêu đề của ứng dụng
     st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland<br>Cùng Voucher</h1></div>', unsafe_allow_html=True)
 
-    # Đường dẫn tới ảnh trên GitHub (Đã cập nhật theo URL bạn cung cấp)
+    # Đường dẫn tới ảnh trên GitHub
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
@@ -479,7 +485,7 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
+    # Thêm div bọc ngoài st.text_area để điều khiển thụt vào
     st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
     items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div textarea-wrapper
@@ -497,7 +503,7 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # THAY ĐỔI: Thêm div bọc ngoài st.text_area để điều khiển thụt vào
+    # Thêm div bọc ngoài st.text_area để điều khiển thụt vào
     st.markdown('<div class="textarea-wrapper">', unsafe_allow_html=True)
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div textarea-wrapper
@@ -507,7 +513,6 @@ with st.container(border=False):
         items = parse_items(items_input)
         vouchers = parse_vouchers(voucher_input)
 
-        # GÓI GỌN TOÀN BỘ PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY, CHỈ HIỂN THỊ KHI CÓ DỮ LIỆU HỢP LỆ
         if items and vouchers:
             result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
 
