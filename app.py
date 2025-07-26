@@ -61,6 +61,26 @@ st.markdown("""
             border-radius: 10px !important;
             padding: 10px !important;
         }
+
+         /* Style cho button */
+                .custom-button {
+            background-color: #AA1F24;
+            color: white;
+            padding: 12px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #8A191E;
+        }
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -143,6 +163,14 @@ voucher_input = st.text_area(
     key="voucher_input_area"
 )
 
+
+button_clicked = st.markdown("""
+    <div style="text-align: center; margin-top: 30px;">
+        <form action="#">
+            <button class="custom-button" type="submit">Tính kết quả tối ưu</button>
+        </form>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Parse dữ liệu ---
 def parse_items(text):
