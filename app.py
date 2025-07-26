@@ -37,20 +37,14 @@ footer { visibility: hidden; }
     margin: 0 auto; /* Căn giữa block container */
 }
 
-/*
-Loại bỏ khung/box xung quanh các phần tử input và kết quả.
-Thay vì tạo .main-container, chúng ta sẽ để nền trắng kem chung
-và chỉ bo góc cho header.
-*/
-/* st.container(border=True) mặc định của Streamlit */
+/* Loại bỏ các box container mặc định của Streamlit nếu chúng được sử dụng */
 div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
-    border: none !important; /* Bỏ viền */
-    box-shadow: none !important; /* Bỏ đổ bóng */
-    background-color: transparent !important; /* Nền trong suốt */
-    padding: 0 !important; /* Bỏ padding */
-    margin: 0 !important; /* Bỏ margin */
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
-
 
 /* Phần tiêu đề ứng dụng (Highland Voucher App) */
 .header-bg {
@@ -109,22 +103,23 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     width: 60%; /* Kích thước ảnh so với hình tròn */
     height: 60%;
     object-fit: contain; /* Đảm bảo ảnh vừa vặn */
+    vertical-align: middle; /* Căn giữa ảnh trong thẻ img */
 }
-
 
 /* Nội dung text và textbox của phần nhập liệu (tiêu đề và mô tả) */
 .input-content {
     flex-grow: 1; /* Cho phép nội dung này mở rộng */
-    /* width: calc(100% - 85px); /* Tính toán lại chiều rộng cho content (width của icon-circle + margin-right) */
+    /* Không đặt width cứng ở đây để flexbox tự điều chỉnh */
 }
 
 .input-content h2 {
     font-size: 1.4em; /* Kích thước chữ tiêu đề */
     font-weight: bold;
     color: #333;
-    margin-top: 0px; /* Đảm bảo sát với icon */
+    margin-top: 0px; /* Đảm bảo sát với icon - Đã chỉnh */
     margin-bottom: 5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    line-height: 1.2; /* Tăng line-height cho tiêu đề */
 }
 
 .input-content p {
@@ -134,25 +129,45 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
-
 /* Định dạng cho vùng nhập liệu (text area) */
 .stTextArea textarea {
     border-radius: 8px; /* Bo góc nhẹ */
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 20px); /* Điều chỉnh chiều rộng để nó không tràn hết bề ngang và có khoảng cách trái phải */
-    margin-left: 20px; /* Đẩy textbox vào một chút để có khoảng cách bên trái */
+    width: calc(100% - 70px); /* THAY ĐỔI: Giảm chiều rộng để có khoảng trống bên trái (cộng thêm 70px của icon-circle + margin-right) */
+    margin-left: 70px; /* THAY ĐỔI: Đẩy textbox sang phải bằng chiều rộng của icon + margin */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
-    min-height: 130px; /* Chiều cao tối thiểu, tăng lên */
+    min-height: 150px; /* THAY ĐỔI: Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
 }
 
-/* Cho text area của voucher nhỏ lại một chút */
-#root > div:nth-child(1) > div.stApp.st-emotion-cache-1wvfyk2.ea3g5ff3 > div > section.main.st-emotion-cache-uf99v8.ea3g5ff8 > div.block-container.st-emotion-cache-1y4pm59.ea3g5ff9 > div:nth-child(5) > div > textarea {
-    min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea */
+/* Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
+/* Đây là class được Streamlit tạo cho div bọc quanh textarea */
+div[data-testid="stTextArea"].st-emotion-cache-1oy39z6 > div:first-child {
+    background-color: #FFFDF1; /* Đặt màu nền trùng với body */
+    padding: 0 !important; /* Xóa padding nếu có */
+    border: none !important; /* Xóa border */
+    box-shadow: none !important; /* Xóa đổ bóng */
 }
+
+
+/* Cho text area của voucher nhỏ lại một chút (nếu cần) */
+/* Cần điều chỉnh selector chính xác nếu muốn áp dụng riêng cho voucher text area.
+   Hiện tại, nó áp dụng cho tất cả st.text_area.
+   Nếu bạn muốn chỉ thay đổi cho voucher, cần tìm ra cách chọn riêng nó.
+   Ví dụ, có thể dùng st.text_area(key="voucher_input_area_key", ...) rồi dùng CSS selector dựa vào key đó
+   nhưng Streamlit không tạo ra ID/class dễ dàng từ key.
+   Cách khác là dùng :nth-of-type hoặc điều chỉnh height trực tiếp trong Python.
+*/
+/*
+div[data-testid="stVerticalBlock"] > div.st-emotion-cache-1oy39z6:nth-of-type(2) textarea {
+    min-height: 90px;
+}
+*/
+/* Điều chỉnh height của text area voucher trực tiếp trong st.text_area(...) */
+
 
 /* Định dạng cho nút bấm chính */
 div.stButton > button:first-child {
@@ -268,7 +283,15 @@ div.stSuccess {
 
 /* Điều chỉnh lại layout của Streamlit widget để phù hợp với flexbox của input-section */
 /* Đây là class được Streamlit tự động tạo cho div chứa text area, bạn có thể cần kiểm tra lại bằng F12 */
-/* .st-ce { flex-grow: 1; } */ /* Tùy chỉnh nếu cần để text area nằm đúng vị trí */
+/* Selector này cố gắng nhắm vào div bên trong st.markdown, chứa text area */
+div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"] div.st-emotion-cache-1oy39z6 > div:first-child > div:nth-child(1) {
+    background-color: transparent !important; /* Làm cho nó trong suốt */
+    border: none !important; /* Xóa border */
+    box-shadow: none !important; /* Xóa đổ bóng */
+    padding: 0 !important; /* Xóa padding */
+    margin: 0 !important; /* Xóa margin */
+}
+
 
 </style>
     """,
@@ -450,7 +473,7 @@ with st.container(border=False):
     st.markdown('<div class="header-bg"><h1 class="header-title">Tiết Kiệm Highland</h1><h2 class="header-subtitle">Cùng Voucher</h2></div>', unsafe_allow_html=True)
 
     # Đường dẫn tới ảnh trên GitHub (thay thế bằng repo của bạn nếu khác)
-    # Giả sử repo của bạn là 'your-username/Highland-voucher-app'
+    # Dựa trên ảnh bạn cung cấp, đây là đường dẫn raw mặc định cho repo của bạn
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongb000/Highland-voucher-app/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
