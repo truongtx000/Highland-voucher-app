@@ -453,7 +453,7 @@ with st.container(border=False):
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
 
     # Phần nhập danh sách món
-    st.markdown('<div class="input-section">', unsafe_allow_html=True)
+st.markdown('<div class="input-section">', unsafe_allow_html=True)
 st.markdown(f'''
     <div class="icon-circle">
         <img src="{COFFEE_ICON_URL}" alt="Coffee Icon">
@@ -471,6 +471,8 @@ items_input = st.text_area(
     height=150,
     label_visibility="collapsed",
     value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nphô mai kem, 69"
+)
+
 
     # Phần nhập danh sách voucher
     st.markdown('<div class="input-section">', unsafe_allow_html=True)
