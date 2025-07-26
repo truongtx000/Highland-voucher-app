@@ -1,3 +1,4 @@
+
 import streamlit as st
 from itertools import combinations
 import math
@@ -173,7 +174,7 @@ div.stButton {
 }
 
 div.stButton > button:first-child {
-    background-color: #A02B2B; /* Màu đỏ đậm */
+    background-color: green !important;
     color: white;
     border-radius: 12px;
     height: 3.5em;
