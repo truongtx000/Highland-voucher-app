@@ -39,6 +39,7 @@ footer { visibility: hidden; }
 }
 
 /* Loại bỏ các box container mặc định của Streamlit nếu chúng được sử dụng */
+/* This targets the outer blocks that Streamlit wraps content in */
 div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: none !important;
     box-shadow: none !important;
@@ -122,28 +123,18 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
+/* --- Quan trọng: Loại bỏ khoảng trắng và căn chỉnh Text Area --- */
+
 /* Ẩn các label mặc định của Streamlit cho text area */
-/* Điều này giúp chúng ta kiểm soát hoàn toàn việc đặt label bằng st.markdown */
 .stTextArea label {
     display: none;
 }
 
-/* Điều chỉnh lại các thành phần bao bọc st.text_area */
-/* Đảm bảo chúng không có nền hoặc padding không mong muốn */
+/* Đảm bảo div cha trực tiếp của textarea không có padding/margin không mong muốn */
 div[data-testid="stTextArea"] {
-    background-color: #FFFDF1 !important; /* Đảm bảo nền cho widget chính */
-}
-
-div[data-testid="stTextArea"] > div:first-child { /* div bao quanh input, border-box */
-    background-color: #FFFDF1 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-div[data-testid="stTextArea"] > div:first-child > div:first-child { /* div bên trong, chứa textarea */
-    background-color: #FFFDF1 !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0px !important;
+    margin: 0px !important;
+    background-color: transparent !important; /* Đảm bảo không có nền trắng */
     border: none !important;
     box-shadow: none !important;
 }
@@ -154,7 +145,7 @@ div[data-testid="stTextArea"] > div:first-child > div:first-child { /* div bên 
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: 100%; /* Chiếm toàn bộ chiều rộng của cha */
+    width: 100% !important; /* Chiếm toàn bộ chiều rộng của cha */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
@@ -162,20 +153,30 @@ div[data-testid="stTextArea"] > div:first-child > div:first-child { /* div bên 
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
-div.stTextArea:nth-of-type(2) textarea {
+/* Sử dụng data-testid để nhắm mục tiêu cụ thể hơn nếu cần */
+div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
     min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
 }
 
+/* --- Sửa lỗi nút bấm --- */
+/* Đảm bảo nút nằm gọn và có màu */
+div.stButton {
+    /* Đặt background-color cho div stButton nếu nó đang gây ra nền trắng */
+    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
+    padding: 0 !important; /* Loại bỏ padding nếu có */
+    margin-top: 30px; /* Khoảng cách với phần trên */
+    margin-bottom: 20px; /* Khoảng cách với phần dưới */
+    text-align: center; /* Căn giữa nút */
+}
 
-/* Định dạng cho nút bấm chính */
 div.stButton > button:first-child {
     background-color: #A02B2B; /* Màu đỏ đậm */
     color: white;
     border-radius: 12px; /* Bo góc */
     height: 3.5em; /* Chiều cao nút */
-    width: 100%; /* Chiếm toàn bộ chiều rộng của cột hoặc container cha */
-    display: block; /* Để căn giữa dễ hơn */
-    margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách. Đã điều chỉnh margin-bottom*/
+    width: 90%; /* Giảm một chút so với 100% để tránh tràn */
+    max-width: 400px; /* Giới hạn chiều rộng tối đa */
+    display: inline-block; /* Để căn giữa với text-align: center */
     font-size: 1.3em; /* Cỡ chữ lớn hơn */
     font-weight: bold;
     border: none;
@@ -446,15 +447,11 @@ def find_optimal_voucher_distribution(items, vouchers):
     return final_solution_groups, best_overall_cost
 
 # --- Giao diện và Hiển thị kết quả ---
-# Đặt nội dung chính trong một container để dễ dàng áp dụng CSS .main-container
-# Sử dụng st.container không border để tự tạo div.main-container bên trong
 with st.container(border=False):
-    st.markdown('<div class="main-container">', unsafe_allow_html=True) # Mở div main-container
+    st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-    # Phần tiêu đề của ứng dụng
     st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland<br>Cùng Voucher</h1></div>', unsafe_allow_html=True)
 
-    # Đường dẫn tới ảnh trên GitHub
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
@@ -472,16 +469,17 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # Sử dụng st.columns để kiểm soát vị trí của textarea
-    # Cột đầu tiên có chiều rộng 85px (70px icon + 15px margin-right), cột thứ hai là phần còn lại
-    col1, col2 = st.columns([85, 1]) # Tỷ lệ 85px cho cột 1, 1 phần cho cột 2
+    # Sử dụng HTML div để tạo khoảng trắng thay vì st.columns
+    st.markdown('<div style="display: flex; align-items: flex-start;">', unsafe_allow_html=True)
+    st.markdown('<div style="width: 85px; flex-shrink: 0; background-color: #FFFDF1;"></div>', unsafe_allow_html=True) # Khoảng trống 85px
+    st.markdown('<div style="flex-grow: 1; background-color: #FFFDF1;">', unsafe_allow_html=True) # Phần chứa textarea
+    items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
+    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng các div đã mở
 
-    with col2: # Đặt textarea vào cột thứ 2
-        items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
 
     # Phần nhập danh sách voucher
     st.markdown(f"""
-        <div class="input-section">
+        <div class="input-section" style="margin-top: 25px;">
             <div class="icon-circle">
                 <img src="{VOUCHER_ICON_URL}" alt="Voucher Icon">
             </div>
@@ -492,13 +490,17 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    col3, col4 = st.columns([85, 1]) # Tỷ lệ 85px cho cột 1, 1 phần cho cột 2
-    with col4: # Đặt textarea vào cột thứ 2
-        voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
+    # Sử dụng HTML div để tạo khoảng trắng tương tự
+    st.markdown('<div style="display: flex; align-items: flex-start;">', unsafe_allow_html=True)
+    st.markdown('<div style="width: 85px; flex-shrink: 0; background-color: #FFFDF1;"></div>', unsafe_allow_html=True) # Khoảng trống 85px
+    st.markdown('<div style="flex-grow: 1; background-color: #FFFDF1;">', unsafe_allow_html=True) # Phần chứa textarea
+    voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
+    st.markdown('</div></div>', unsafe_allow_html=True) # Đóng các div đã mở
 
 
-    # Đặt nút bấm vào một container riêng để đảm bảo bố cục
-    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True) # Tạo div để căn giữa nút
+    # Nút tính toán
+    # Đặt nút trong một container có text-align center để căn giữa
+    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
     if st.button("Tính kết quả tối ưu"):
         items = parse_items(items_input)
         vouchers = parse_vouchers(voucher_input)
@@ -506,7 +508,6 @@ with st.container(border=False):
         if items and vouchers:
             result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
 
-            # Đây là phần hiển thị kết quả
             st.markdown('<h2 class="results-header">📄 KẾT QUẢ TỐI ƯU</h2>', unsafe_allow_html=True)
             
             original_total = sum(item["price"] for item in items)
@@ -521,14 +522,14 @@ with st.container(border=False):
                 
                 for item in group["items"]:
                     st.markdown(f'<p class="result-item">- {item["name"]} ({item["price"]}k)</p>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True) # Đóng div result-group
+                st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown(f'<p class="final-cost">Tổng chi phí sau giảm giá: <strong>{final_cost}k</strong> <span class="discount-amount">(giảm được {total_discount}k)</span></p>', unsafe_allow_html=True)
-        elif not items and not voucher_input.strip(): # Trường hợp cả 2 input đều rỗng
+        elif not items and not voucher_input.strip():
              st.warning("❗ Vui lòng nhập thông tin món và voucher để bắt đầu.")
-        elif not items: # Chỉ món rỗng
+        elif not items:
             st.warning("❗ Vui lòng nhập ít nhất 1 món.")
-        elif not vouchers: # Chỉ voucher rỗng
+        elif not vouchers:
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
     st.markdown('</div>', unsafe_allow_html=True) # Đóng div căn giữa nút
 
