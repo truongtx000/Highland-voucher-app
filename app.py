@@ -14,7 +14,6 @@ st.markdown(
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
     background-color: #FFFDF1; /* Màu vàng nhạt / trắng kem */
-    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA để Streamlit tự quản lý font mặc định */
 }
 
 /* Ẩn Streamlit header và footer mặc định */
@@ -24,7 +23,6 @@ footer { visibility: hidden; }
 /* Container chính của Streamlit, điều chỉnh padding để nội dung sát hơn */
 .stApp {
     background-color: #FFFDF1; /* Đảm bảo nền app trùng với body */
-    /* CŨNG KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
 }
 
 /* Vùng chứa nội dung chính để bo góc và đổ bóng cho toàn bộ app */
@@ -62,11 +60,10 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 /* Tiêu đề chính thành một thẻ h1 duy nhất*/
 .header-bg h1 {
     font-size: 2.5em; /* Kích thước chữ lớn */
-    font-weight: 900; /* Rất đậm - Vẫn giữ để font mặc định đậm nhất có thể */
+    font-weight: 900; /* Rất đậm */
     margin: 0; /* Bỏ margin mặc định */
     letter-spacing: 0.5px; /* Khoảng cách giữa các chữ cái */
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Đổ bóng chữ */
-    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
@@ -112,7 +109,6 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     color: #333;
     margin-top: 0px !important; /* Đảm bảo sát với icon, override mọi margin mặc định của h2*/
     margin-bottom: 5px;
-    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
@@ -143,7 +139,6 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     background-color: white; /* Nền trắng cho textbox */
     margin-left: 0 !important; 
     margin-top: 0 !important; 
-    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
     font-weight: 400 !important; /* Mặc định cho textarea */
 }
 
@@ -166,26 +161,25 @@ div[data-testid="stTextArea"] > div:first-child {
 }
 
 
-/* --- Sửa lỗi nút bấm (bỏ font-family, chỉ giữ font-weight) --- */
-div.stButton {
-    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
-    padding: 0 !important; /* Loại bỏ padding nếu có */
-    margin-top: 30px; /* Khoảng cách với phần trên */
-    margin-bottom: 20px; /* Khoảng cách với phần dưới */
-    text-align: center; /* Căn giữa nút */
+/* --- CSS cho Nút Tùy Chỉnh (button_custom) --- */
+.custom-button-container {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
 }
 
-div.stButton > button:first-child {
+.custom-button {
     background-color: #A02B2B; /* Màu đỏ đậm */
     color: white;
     border-radius: 12px; /* Bo góc */
     height: 3.5em; /* Chiều cao nút */
     width: 90%; /* Điều chỉnh lại width cho an toàn */
     max-width: 400px; /* Giới hạn chiều rộng tối đa */
-    display: inline-block; /* Để căn giữa với text-align: center */
-    font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
-    font-weight: 800 !important; /* Rất đậm, dùng !important (hoặc thử 900, bold) */
-    /* LOẠI BỎ font-family: 'Roboto Condensed', sans-serif !important; */
+    display: inline-flex; /* Dùng flexbox để căn giữa nội dung */
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center; /* Căn giữa dọc */
+    font-size: 1.3em; 
+    font-weight: bold; /* Dùng 'bold' hoặc 700/800/900 để đảm bảo đậm nhất có thể */
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
@@ -194,16 +188,23 @@ div.stButton > button:first-child {
     line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
     cursor: pointer;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
+    /* Loại bỏ font-family ở đây để dùng font mặc định */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding: 0 20px; /* Thêm padding ngang để text không sát viền */
 }
 
-/* Hiệu ứng khi di chuột qua nút */
-div.stButton > button:first-child:hover {
+.custom-button:hover {
     background-color: #861d1f; /* Màu đỏ sẫm hơn khi hover */
     transform: scale(1.02); /* Nút to lên một chút */
     box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
 }
+
+.custom-button-icon {
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+    font-size: 1.2em; /* Kích thước icon */
+}
+
 
 /* Tiêu đề cho phần kết quả */
 .results-header {
@@ -217,7 +218,6 @@ div.stButton > button:first-child:hover {
     text-align: center;
     text-transform: uppercase; /* Chữ hoa */
     letter-spacing: 1px;
-    /* KHÔNG ĐẶT FONT-FAMILY Ở ĐÂY NỮA */
 }
 
 /* Container cho mỗi nhóm kết quả (voucher + món ăn) */
@@ -466,9 +466,48 @@ with st.container(border=False):
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
-    # Nút tính toán
-    st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
-    if st.button("Tính kết quả tối ưu"):
+    # Nút tính toán được tạo bằng HTML/Markdown tùy chỉnh
+    st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
+    # Sử dụng st.empty để tạo một placeholder cho nút, sau đó update bằng HTML
+    # Điều này cần thiết để Streamlit nhận diện click event
+    button_placeholder = st.empty()
+    
+    # HTML cho nút tùy chỉnh (sử dụng icon từ Font Awesome nếu bạn đã import, hoặc đơn giản là text "✔️")
+    # Để có icon thực sự, bạn cần import Font Awesome vào ứng dụng Streamlit (thêm link CSS vào st.markdown style block)
+    # Ví dụ: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    # Tạm thời dùng emoji unicode hoặc text để đơn giản
+    button_html = f"""
+        <button class="custom-button" onclick="window.parent.document.getElementById('{button_placeholder.id}').click()">
+            <span class="custom-button-icon">✅</span> <strong>TÍNH KẾT QUẢ TỐI ƯU</strong>
+        </button>
+    """
+    
+    # Hiển thị nút HTML. st.button sẽ vẫn được sử dụng để bắt sự kiện click
+    # và ẩn đi bằng CSS nếu muốn (hoặc bỏ hẳn div.stButton style nếu dùng cách này).
+    # Tuy nhiên, để bắt sự kiện click trên custom button, chúng ta cần một chút JavaScript trick.
+    # Cách tốt nhất là dùng st.form để bọc và dùng st.form_submit_button
+    # HOẶC, nếu không dùng form, chúng ta phải dựa vào mẹo JavaScript.
+    # Với Streamlit hiện tại, việc tạo button HTML tùy chỉnh mà vẫn bắt được sự kiện Python là phức tạp.
+    # Nút st.button thông thường là cách tốt nhất để bắt sự kiện Python.
+    # Do đó, chúng ta sẽ quay lại với st.button, nhưng sẽ cố gắng ép font-weight mạnh nhất có thể.
+
+    # --- KHẮC PHỤC CUỐI CÙNG CHO NÚT (Quay lại st.button nhưng tối ưu CSS) ---
+    # Nếu font-weight không được áp dụng, hãy thử một font khác phổ biến hơn, 
+    # hoặc chấp nhận font mặc định và chỉ đảm bảo 'bold'
+    
+    # Đặt lại CSS cho nút ở đây, bỏ toàn bộ phần custom-button-container và custom-button
+    # và sử dụng lại div.stButton
+    
+    # --- Code để tạo nút (quay lại st.button) ---
+    # Đảm bảo phần CSS cho div.stButton đã được sửa đúng như đề xuất trước
+    # Tức là: bỏ font-family và chỉ giữ font-weight: 800/900/bold
+    
+    # Cần một biến để bắt sự kiện click của button
+    submitted = st.button("✅ Tính kết quả tối ưu")
+    
+    st.markdown('</div>', unsafe_allow_html=True) # Đóng custom-button-container hoặc div của nút
+
+    if submitted: # Thay vì if st.button(...)
         items = parse_items(items_input)
         vouchers = parse_vouchers(voucher_input)
 
@@ -498,6 +537,6 @@ with st.container(border=False):
             st.warning("❗ Vui lòng nhập ít nhất 1 món.")
         elif not vouchers:
             st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True) # đóng div.stButton (hoặc .custom-button-container)
 
     st.markdown('</div>', unsafe_allow_html=True)
