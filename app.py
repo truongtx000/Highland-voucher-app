@@ -12,13 +12,13 @@ st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-
-
-
-
 st.markdown(
     """
 <style>
+
+/* Import font Roboto Condensed từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
     div.stButton {
         background-color: #FFFDF1 !important;
         padding: 0 !important;
@@ -51,10 +51,6 @@ st.markdown(
         background-color: #861d1f;
         transform: scale(1.02);
     }
-
-
-/* Import font Roboto Condensed từ Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
