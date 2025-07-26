@@ -14,7 +14,7 @@ st.markdown(
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
-    background-color: #000000; /* Màu vàng nhạt / trắng kem */
+    background-color: #ffffff; /* Màu vàng nhạt / trắng kem */
     font-family: 'Roboto Condensed', sans-serif; /* Font Roboto Condensed */
 }
 
@@ -24,7 +24,7 @@ footer { visibility: hidden; }
 
 /* Container chính của Streamlit, điều chỉnh padding để nội dung sát hơn */
 .stApp {
-    background-color: #000000; /* Đảm bảo nền app trùng với body */
+    background-color: #ffffff; /* Đảm bảo nền app trùng với body */
 }
 
 /* Vùng chứa nội dung chính để bo góc và đổ bóng cho toàn bộ app */
