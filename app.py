@@ -174,22 +174,22 @@ div.stButton {
 }
 
 div.stButton > button:first-child {
-    background-color: green !important;
+    background-color: #A02B2B;
     color: white;
     border-radius: 12px;
     height: 3.5em;
     width: 100%;
     max-width: 500px;
     display: inline-block;
-    font-size: 1.6em;         /* ↑ Tăng size lên nữa nếu muốn rõ hơn */
-    font-weight: 800;         /* ↑ Tăng độ đậm (700: bold, 800: extra bold) */
-    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.6em !important;      /* ép kích thước chữ */
+    font-weight: 800 !important;      /* ép độ đậm */
+    font-family: 'Roboto Condensed', sans-serif !important;  /* ép font */
     border: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
     transition: all 0.3s ease-in-out;
     letter-spacing: 0.5px;
     white-space: normal;
-    line-height: 1.3;         /* Có thể tăng thêm nếu text dài */
+    line-height: 1.3;
 }
 
 /* Tiêu đề cho phần kết quả */
