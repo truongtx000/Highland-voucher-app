@@ -59,7 +59,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
 }
 
-/* THAY ĐỔI: Tiêu đề chính thành một thẻ h1 duy nhất*/
+/* Tiêu đề chính thành một thẻ h1 duy nhất*/
 .header-bg h1 {
     font-size: 2.5em; /* Kích thước chữ lớn */
     font-weight: 900; /* Rất đậm */
@@ -73,44 +73,32 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
-        display: flex;
-        align-items: center;
-        background-color: #fffcef;
-        padding: 12px 16px;
-        border-radius: 12px;
-        margin-bottom: 10px;
-        border: 1px solid #ddb87d;
-    }
-    .icon-circle {
-        flex-shrink: 0;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #fce4c5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 16px;
-    }
-    .icon-circle img {
-        width: 30px;
-        height: 30px;
-    }
-    .input-content h2 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-    }
-    .input-content p {
-        margin: 4px 0 0 0;
-        font-size: 14px;
-        color: #555;
-    }
-    /* Bỏ màu xám bên trái textarea */
-    .block-container .stTextArea {
-        padding-left: 0 !important;
-        background-color: transparent;
-    }
+    display: flex; /* Dùng flexbox để căn chỉnh icon và nội dung */
+    align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử (để tiêu đề sát icon)*/
+    margin-bottom: 25px; /* Khoảng cách giữa các section */
+    box-sizing: border-box;
+}
+
+/* Icon lớn trong hình tròn */
+.icon-circle {
+    background-color: #F8D882; /* Màu vàng của hình tròn */
+    border-radius: 50%; /* Hình tròn hoàn hảo */
+    width: 70px; /* Kích thước hình tròn */
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px; /* Khoảng cách giữa hình tròn và text */
+    flex-shrink: 0; /* Không cho hình tròn bị co lại */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
+}
+
+.icon-circle img { /* Định dạng ảnh bên trong hình tròn */
+    width: 60%; /* Kích thước ảnh so với hình tròn */
+    height: 60%;
+    object-fit: contain; /* Đảm bảo ảnh vừa vặn */
+    vertical-align: middle; /* Căn giữa ảnh trong thẻ img */
+}
 
 /* Nội dung text và textbox của phần nhập liệu (tiêu đề và mô tả) */
 .input-content {
@@ -140,15 +128,18 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: calc(100% - 95px); /* Giảm chiều rộng để có khoảng trống bên trái (70px icon + 15px margin-right + 10px thêm)*/
-    margin-left: 85px; /* Đẩy textbox sang phải nhiều hơn (icon_width + margin_right)*/
+    
+    /* THAY ĐỔI LỚN: Loại bỏ thụt vào bên trái */
+    width: 100% !important; /* Đảm bảo chiếm toàn bộ chiều rộng có sẵn */
+    margin-left: 0 !important; /* Đẩy sát về lề trái */
+    
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
 }
 
-/* THAY ĐỔI: Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
+/* Đảm bảo phần màu xám bên trái textbox biến mất/trùng màu nền */
 /* Đây là class được Streamlit tạo cho div bọc quanh textarea */
 div[data-testid="stTextArea"] > div:first-child > div:first-child {
     background-color: #FFFDF1 !important; /* Màu nền trùng với body*/
@@ -174,7 +165,7 @@ div.stButton > button:first-child {
     height: 3.5em; /* Chiều cao nút */
     width: calc(100% - 40px); /* Chiếm phần lớn chiều rộng, trừ padding tổng cộng 40px */
     display: block; /* Để căn giữa dễ hơn */
-    margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách. THAY ĐỔI: Giảm margin-bottom */
+    margin: 30px auto 20px auto; /* Căn giữa theo chiều ngang và khoảng cách. Đã điều chỉnh margin-bottom*/
     font-size: 1.3em; /* Cỡ chữ lớn hơn */
     font-weight: bold;
     border: none;
@@ -197,7 +188,7 @@ div.stButton > button:first-child:hover {
     font-size: 1.8em;
     font-weight: bold;
     color: #333; /* Màu chữ đen */
-    margin-top: 20px; /* THAY ĐỔI: Giảm margin-top để sát hơn với nút bấm */
+    margin-top: 20px; /* Giảm margin-top để sát hơn với nút bấm */
     margin-bottom: 10px; /* Giảm margin-bottom để sát hơn với kết quả*/
     border-bottom: 2px solid #C29A5F; /* Đường gạch chân màu nâu */
     padding-bottom: 10px;
@@ -456,11 +447,9 @@ with st.container(border=False):
     st.markdown('<div class="main-container">', unsafe_allow_html=True) # Mở div main-container
 
     # Phần tiêu đề của ứng dụng
-    # THAY ĐỔI: Sử dụng một thẻ h1 duy nhất
     st.markdown('<div class="header-bg"><h1>Tiết Kiệm Highland<br>Cùng Voucher</h1></div>', unsafe_allow_html=True)
 
     # Đường dẫn tới ảnh trên GitHub (Đã cập nhật theo URL bạn cung cấp)
-    # Đảm bảo đây là đường dẫn RAW chính xác tới file ảnh của bạn trên GitHub
     GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/"
     COFFEE_ICON_URL = GITHUB_RAW_BASE_URL + "coffee.png"
     VOUCHER_ICON_URL = GITHUB_RAW_BASE_URL + "voucher.png"
@@ -471,6 +460,7 @@ with st.container(border=False):
     st.markdown('<div class="input-content">', unsafe_allow_html=True)
     st.markdown('<h2>Nhập danh sách món</h2>', unsafe_allow_html=True)
     st.markdown('<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>', unsafe_allow_html=True)
+    # Đã điều chỉnh CSS để textarea không còn thụt vào
     items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
     st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
 
@@ -480,6 +470,7 @@ with st.container(border=False):
     st.markdown('<div class="input-content">', unsafe_allow_html=True)
     st.markdown('<h2>Nhập danh sách voucher</h2>', unsafe_allow_html=True)
     st.markdown('<p>Nhập mỗi voucher theo dạng: min_price, discount</p>', unsafe_allow_html=True)
+    # Đã điều chỉnh CSS để textarea không còn thụt vào
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
     st.markdown('</div></div>', unsafe_allow_html=True) # Đóng div input-content và input-section
 
