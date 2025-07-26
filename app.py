@@ -505,3 +505,35 @@ with st.container(border=False):
     # Nút tính toán
     if st.button("Tính kết quả tối ưu"):
         items = parse_items(items_input)
+vouchers = parse_vouchers(voucher_input)
+
+        # GÓI GỌN TOÀN BỘ PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY, CHỈ HIỂN THỊ KHI CÓ DỮ LIỆU HỢP LỆ
+        if items and vouchers:
+            result_groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
+
+            # Đây là phần hiển thị kết quả
+            st.markdown('<h2 class="results-header">📄 KẾT QUẢ TỐI ƯU</h2>', unsafe_allow_html=True)
+            
+            original_total = sum(item["price"] for item in items)
+            total_discount = original_total - final_cost
+            
+            for idx, group in enumerate(result_groups, 1):
+                st.markdown('<div class="result-group">', unsafe_allow_html=True)
+                if group["voucher"]:
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: {group["voucher"]["label"]} (Tổng: {group["total"]}k → {group["final"]}k)</p>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: Không dùng voucher (Tổng: {group["total"]}k)</p>', unsafe_allow_html=True)
+                
+                for item in group["items"]:
+                    st.markdown(f'<p class="result-item">- {item["name"]} ({item["price"]}k)</p>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True) # Đóng div result-group
+            
+            st.markdown(f'<p class="final-cost">Tổng chi phí sau giảm giá: <strong>{final_cost}k</strong> <span class="discount-amount">(giảm được {total_discount}k)</span></p>', unsafe_allow_html=True)
+        elif not items and not voucher_input.strip(): # Trường hợp cả 2 input đều rỗng
+             st.warning("❗ Vui lòng nhập thông tin món và voucher để bắt đầu.")
+        elif not items: # Chỉ món rỗng
+            st.warning("❗ Vui lòng nhập ít nhất 1 món.")
+        elif not vouchers: # Chỉ voucher rỗng
+            st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
+
+    st.markdown('</div>', unsafe_allow_html=True) # Đóng div main-container
