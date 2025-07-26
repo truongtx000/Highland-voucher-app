@@ -11,6 +11,14 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
+
+
+
+
+
+st.markdown(
+    """
+<style>
     div.stButton {
         background-color: #FFFDF1 !important;
         padding: 0 !important;
@@ -45,11 +53,6 @@ st.markdown("""
     }
 
 
-
-
-st.markdown(
-    """
-<style>
 /* Import font Roboto Condensed từ Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
