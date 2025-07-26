@@ -12,6 +12,19 @@ st.markdown("""
             background-color: #FFFDF1 !important;
         }
 
+          /* Header nền đỏ */
+    .full-width-header {
+        background-color: #AA1F24;
+        color: white;
+        padding: 2rem 1rem; /* Tăng chiều cao */
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 -1rem 2rem -1rem; /* Tràn hết lề màn hình Streamlit */
+        border-radius: 0;
+    }
+
+    
         /* Layout hàng ngang cho phần nhập */
         .flex-row {
             display: flex;
@@ -53,10 +66,11 @@ st.markdown("""
 
 # --- Tiêu đề ---
 st.markdown("""
-<div class="title-container">
-    <h2>Tiết Kiệm Highland<br>Cùng Voucher</h2>
+<div class="full-width-header">
+    Tiết Kiệm Highland<br>Cùng Voucher
 </div>
 """, unsafe_allow_html=True)
+
 
 # --- Khối nhập liệu ---
 st.markdown("""
