@@ -53,20 +53,73 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Khối nhập liệu ---
-st.markdown("<div class='input-card'>", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #FFFCF3;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        .flex-row img {
+            width: 48px;
+            height: 48px;
+        }
+        .flex-content h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .flex-content p {
+            margin: 0;
+            color: #555;
+        }
+        .no-label textarea {
+            background-color: white !important;
+            border: 2px solid #d1a465;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.markdown("""<h4>🛍️ Nhập danh sách món</h4>
-<p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>""", unsafe_allow_html=True)
-    items_input = st.text_area("", height=150, label_visibility="collapsed")
+# 🧋 Nhập danh sách món
+st.markdown("""
+    <div class="flex-row">
+        <img src="https://cdn-icons-png.flaticon.com/512/2935/2935469.png" alt="coffee icon">
+        <div class="flex-content">
+            <h2>Nhập danh sách món</h2>
+            <p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+items_input = st.text_area(
+    label="",
+    height=150,
+    label_visibility="collapsed",
+    key="items_input_area"
+)
 
-with col2:
-    st.markdown("""<h4>🎁 Nhập danh sách voucher</h4>
-<p>Nhập mỗi voucher theo dạng: min_price, discount</p>""", unsafe_allow_html=True)
-    voucher_input = st.text_area("", height=150, label_visibility="collapsed")
+# 🎟️ Nhập danh sách voucher
+st.markdown("""
+    <div class="flex-row">
+        <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="voucher icon">
+        <div class="flex-content">
+            <h2>Nhập danh sách voucher</h2>
+            <p>Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+voucher_input = st.text_area(
+    label="",
+    height=100,
+    label_visibility="collapsed",
+    key="voucher_input_area"
+)
 
-st.markdown("</div>", unsafe_allow_html=True)
 
 # --- Parse dữ liệu ---
 def parse_items(text):
