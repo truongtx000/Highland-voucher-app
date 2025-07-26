@@ -24,18 +24,21 @@ st.markdown("""
         }
 
         .flex-row img {
-            width: 48px;
-            height: 48px;
+            width: 60px;  /* Tăng kích thước hình */
+            height: 60px;
         }
 
         .flex-content h2 {
             margin: 0;
             font-size: 1.5rem;
+            line-height: 1.2;  /* Giảm khoảng cách giữa tiêu đề và mô tả */
         }
 
         .flex-content p {
             margin: 0;
             color: #555;
+            font-size: 0.95rem;
+            line-height: 1.3;
         }
 
         /* Style cho textarea */
@@ -47,7 +50,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
 
 # --- Tiêu đề ---
 st.markdown("""
