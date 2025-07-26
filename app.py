@@ -505,7 +505,7 @@ with st.container(border=False):
     # Nút tính toán
     if st.button("Tính kết quả tối ưu"):
         items = parse_items(items_input)
-vouchers = parse_vouchers(voucher_input)
+        vouchers = parse_vouchers(voucher_input)
 
         # GÓI GỌN TOÀN BỘ PHẦN HIỂN THỊ KẾT QUẢ VÀO ĐÂY, CHỈ HIỂN THỊ KHI CÓ DỮ LIỆU HỢP LỆ
         if items and vouchers:
