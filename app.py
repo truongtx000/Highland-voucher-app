@@ -14,7 +14,7 @@ st.markdown(
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
-    background-color: #FFFDF1; /* Màu vàng nhạt / trắng kem */
+    background-color: #000000; /* Màu vàng nhạt / trắng kem */
     font-family: 'Roboto Condensed', sans-serif; /* Font Roboto Condensed */
 }
 
