@@ -1,301 +1,96 @@
 import streamlit as st
-from itertools import combinations
+from PIL import Image
 
-# Cấu hình giao diện
-st.set_page_config(page_title="Highland Voucher App", layout="centered")
-
-# --- CSS tùy chỉnh ---
+# === CSS STYLING ===
 st.markdown("""
     <style>
-        /* Đổi màu nền toàn bộ trang */
-        html, body, .stApp {
-            background-color: #FFFDF1 !important;
-        }
-
-          /* Header nền đỏ */
-    .full-width-header {
-        background-color: #AA1F24;
-        color: white;
-        padding: 2rem 1rem; /* Tăng chiều cao */
-        text-align: center;
-        font-size: 2rem;
-        font-weight: bold;
-        margin: 0 -1rem 2rem -1rem; /* Tràn hết lề màn hình Streamlit */
-        border-radius: 0;
-    }
-
-    
-        /* Layout hàng ngang cho phần nhập */
-        .flex-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        body {
             background-color: #FFFDF1;
-            padding: 1rem;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
         }
-
-        .flex-row img {
-            width: 500px;  /* Tăng kích thước hình */
-            height: 500px;
+        .main {
+            background-color: #FFFDF1;
         }
-
-        .flex-content h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            line-height: 0.5;  /* Giảm khoảng cách giữa tiêu đề và mô tả */
+        .title-section {
+            background-color: #AA1F24;
+            padding: 40px 0 25px 0;
+            text-align: center;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            border-radius: 0;
+            margin-bottom: 30px;
         }
-
-        .flex-content p {
-            margin: 0;
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 0.5;
+        .input-block {
+            background-color: #FFF9E7;
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
         }
-
-        /* Style cho textarea */
+        .input-block img {
+            width: 60px;
+            height: 60px;
+        }
+        .input-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         textarea {
-            background-color: white !important;
+            background-color: white;
             border: 2px solid #C29A5F !important;
             border-radius: 10px !important;
-            padding: 10px !important;
         }
-
-         /* Style cho button */
-                .custom-button {
-            background-color: #AA1F24;
-            color: white;
-            padding: 12px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .custom-button:hover {
-            background-color: #8A191E;
-        }
-
-
-                div.stButton > button:first-child {
+        div.stButton > button:first-child {
             background-color: #AA1F24;
             color: white;
             font-weight: bold;
-            padding: 12px 30px;
+            padding: 15px;
             font-size: 20px;
             border: none;
             border-radius: 15px;
             width: 100%;
             margin-top: 20px;
         }
-
         div.stButton > button:first-child:hover {
             background-color: #8A191E;
         }
-
     </style>
 """, unsafe_allow_html=True)
 
-# --- Tiêu đề ---
+# === TITLE ===
+st.markdown('<div class="title-section">Tiết Kiệm Highland<br>Cùng Voucher</div>', unsafe_allow_html=True)
+
+# === INPUT BLOCK 1 ===
 st.markdown("""
-<div class="full-width-header">
-    Tiết Kiệm Highland<br>Cùng Voucher
+<div class="input-block">
+    <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/coffee.png"/>
+    <div class="input-text">
+        <div style="font-weight: 700; font-size: 20px">Nhập danh sách món</div>
+        <div style="color: #555">Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
+menu_input = st.text_area("", key="menu", height=150, label_visibility="collapsed")
 
-
-# --- Khối nhập liệu ---
+# === INPUT BLOCK 2 ===
 st.markdown("""
-    <style>
-        .flex-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background-color: #FFFCF3;
-            padding: 1rem;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
-        }
-        .flex-row img {
-            width: 48px;
-            height: 48px;
-        }
-        .flex-content h2 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        .flex-content p {
-            margin: 0;
-            color: #555;
-        }
-        .no-label textarea {
-            background-color: white !important;
-            border: 2px solid #d1a465;
-            border-radius: 10px;
-            padding: 10px;
-            width: 100%;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# 🧋 Nhập danh sách món
-st.markdown("""
-    <div class="flex-row">
-        <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/coffee.png" alt="coffee icon">
-        <div class="flex-content">
-            <h2>Nhập danh sách món</h2>
-            <p>Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)</p>
-        </div>
+<div class="input-block">
+    <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/voucher.png"/>
+    <div class="input-text">
+        <div style="font-weight: 700; font-size: 20px">Nhập danh sách voucher</div>
+        <div style="color: #555">Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</div>
     </div>
+</div>
 """, unsafe_allow_html=True)
+voucher_input = st.text_area("", key="voucher", height=150, label_visibility="collapsed")
 
-items_input = st.text_area(
-    label="",
-    height=150,
-    label_visibility="collapsed",
-    key="items_input_area"
-)
-
-
-# 🎟️ Nhập danh sách voucher
-st.markdown("""
-    <div class="flex-row">
-        <img src="https://raw.githubusercontent.com/truongtx000/Highland-voucher-app/refs/heads/main/images/voucher.png" alt="voucher icon">
-        <div class="flex-content">
-            <h2>Nhập danh sách voucher</h2>
-            <p>Nhập mỗi dòng: [giá tối thiểu] [số tiền giảm] (vd: 169 40)</p>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
-
-voucher_input = st.text_area(
-    label="",
-    height=100,
-    label_visibility="collapsed",
-    key="voucher_input_area"
-)
-
-
-with st.form("submit_form"):
-    submitted = st.form_submit_button("Tính kết quả tối ưu")
-
-    # Nếu người dùng bấm nút
-    if submitted:
-        # 👉 Thực hiện tính toán tại đây
-        st.success("Đã bấm nút! Xử lý dữ liệu tại đây.")
-
-# --- Parse dữ liệu ---
-def parse_items(text):
-    lines = text.strip().split("\n")
-    items = []
-    for i, line in enumerate(lines):
-        if "," in line:
-            name, price_str = line.rsplit(",", 1)
-            try:
-                price = int(price_str.strip())
-                items.append({"id": i, "name": name.strip(), "price": price})
-            except ValueError:
-                st.warning(f"❗ Lỗi định dạng giá ở dòng: '{line}'. Vui lòng nhập số nguyên.")
-        elif line.strip():
-            st.warning(f"❗ Định dạng không đúng ở dòng: '{line}'. Vui lòng nhập theo dạng 'tên, giá'.")
-    return items
-
-def parse_vouchers(text):
-    lines = text.strip().split("\n")
-    vouchers = []
-    for i, line in enumerate(lines):
-        if "," in line:
-            try:
-                min_total, discount = map(int, line.strip().split(","))
-                vouchers.append({"id": i, "min_total": min_total, "discount": discount,
-                                 "label": f"🎁 ({min_total}k -{discount}k)"})
-            except ValueError:
-                st.warning(f"❗ Lỗi định dạng voucher ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
-        elif line.strip():
-            st.warning(f"❗ Định dạng không đúng ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
-    return vouchers
-
-# --- Tối ưu ---
-def find_optimal_voucher_distribution(items, vouchers):
-    best_total_cost = float('inf')
-    best_solution_details = []
-
-    item_indices = list(range(len(items)))
-
-    def recurse(remaining_indices, voucher_index, current_groups):
-        nonlocal best_total_cost, best_solution_details
-
-        if voucher_index == len(vouchers):
-            leftover_cost = sum(items[i]['price'] for i in remaining_indices)
-            total = sum(g['final'] for g in current_groups) + leftover_cost
-            if total < best_total_cost:
-                best_total_cost = total
-                result = current_groups[:]
-                if remaining_indices:
-                    result.append({
-                        "voucher": None,
-                        "items": [items[i] for i in remaining_indices],
-                        "total": leftover_cost,
-                        "final": leftover_cost
-                    })
-                best_solution_details = result
-            return
-
-        recurse(remaining_indices, voucher_index + 1, current_groups[:])
-
-        current_voucher = vouchers[voucher_index]
-        for r in range(1, len(remaining_indices)+1):
-            for combo in combinations(remaining_indices, r):
-                selected_items = [items[i] for i in combo]
-                group_total = sum(i['price'] for i in selected_items)
-                if group_total >= current_voucher['min_total']:
-                    next_remaining = [i for i in remaining_indices if i not in combo]
-                    new_group = current_groups + [{
-                        "voucher": current_voucher,
-                        "items": selected_items,
-                        "total": group_total,
-                        "final": group_total - current_voucher['discount']
-                    }]
-                    recurse(next_remaining, voucher_index + 1, new_group)
-
-    recurse(item_indices, 0, [])
-    return best_solution_details, best_total_cost
-
-# --- Xử lý khi nhấn nút ---
-with st.form("submit_form"):
+# === BUTTON ===
+# Chỉ cho phép 1 form duy nhất trong app
+with st.form(key="main_form"):
     submitted = st.form_submit_button("Tính kết quả tối ưu")
 
     if submitted:
-        # Gọi hàm xử lý tối ưu ở đây
-        st.success("Đã tính xong kết quả!")
-
-st.markdown("<div class='submit-button'>", unsafe_allow_html=True)
-if st.button("Tính kết quả tối ưu"):
-    items = parse_items(items_input)
-    vouchers = parse_vouchers(voucher_input)
-
-    if not items:
-        st.warning("❗ Vui lòng nhập ít nhất 1 món.")
-    elif not vouchers:
-        st.warning("❗ Vui lòng nhập ít nhất 1 voucher.")
-    else:
-        results, total_cost = find_optimal_voucher_distribution(items, vouchers)
-
-        st.subheader("📄 KẾT QUẢ TỐI ƯU")
-        for idx, group in enumerate(results, 1):
-            if group['voucher']:
-                st.markdown(f"**Nhóm {idx}** {group['voucher']['label']} _(Tổng: {group['total']}k → {group['final']}k)_")
-            else:
-                st.markdown(f"**Nhóm {idx}** _(Không dùng voucher)_ _(Tổng: {group['total']}k)_")
-            for item in group['items']:
-                st.markdown(f"- {item['name']} ({item['price']}k)")
-
-        original_total = sum(i['price'] for i in items)
-        st.success(f"✅ Tổng chi phí sau giảm giá: **{total_cost}k** (giảm được **{original_total - total_cost}k**) ")
-
-st.markdown("</div>", unsafe_allow_html=True)
+        # TODO: Gọi xử lý logic tại đây
+        st.success("Đã xử lý xong!")
