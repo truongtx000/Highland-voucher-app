@@ -24,8 +24,8 @@ st.markdown("""
         }
 
         .flex-row img {
-            width: 200px;  /* Tăng kích thước hình */
-            height: 200px;
+            width: 500px;  /* Tăng kích thước hình */
+            height: 500px;
         }
 
         .flex-content h2 {
