@@ -1,42 +1,55 @@
-# highland_voucher_app.py
 import streamlit as st
 from itertools import combinations
+import math
 
 st.set_page_config(page_title="Highland Voucher App", layout="centered")
-st.title("🧾 KẾT QUẢ TỐI ƯU")
-
-# === UI Section ===
 st.markdown("""
-<style>
-    .custom-button {
-        background-color: #ff4b4b;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-    .custom-button:hover {
-        background-color: #ff1a1a;
-    }
-</style>
+    <style>
+        .custom-button {
+            background-color: #d62828;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #a61c1c;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+
+        .section-header {
+            font-size: 24px;
+            margin-top: 40px;
+            color: #1a1a1a;
+        }
+
+        .stTextArea label, .stButton button {
+            font-size: 18px;
+        }
+    </style>
 """, unsafe_allow_html=True)
 
-st.header("📋 Nhập danh sách món")
-items_input = st.text_area(
-    "Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)",
-    height=200,
-    value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69\n"
-)
+st.markdown('<div class="title">🧾 Highland Voucher App</div>', unsafe_allow_html=True)
 
-st.header("🎁 Nhập danh sách voucher")
-voucher_input = st.text_area(
-    "Nhập mỗi voucher theo dạng: min_price, discount",
-    value="135,30\n135,30\n169,40"
-)
+# --- UI: Nhập món ---
+st.markdown('<div class="section-header">📋 Nhập danh sách món</div>', unsafe_allow_html=True)
+items_input = st.text_area("Nhập tên và giá từng món, mỗi dòng 1 món (vd: cf sữa m, 39)", height=200, value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69\n")
 
-# === Parse input ===
+# --- UI: Nhập voucher ---
+st.markdown('<div class="section-header">🎁 Nhập danh sách voucher</div>', unsafe_allow_html=True)
+voucher_input = st.text_area("Nhập mỗi voucher theo dạng: min_price, discount", value="135,30\n135,30\n169,40")
+
+# --- Parse dữ liệu ---
 @st.cache_data
 def parse_items(text):
     lines = text.strip().split("\n")
@@ -73,54 +86,63 @@ def parse_vouchers(text):
             st.warning(f"❗ Định dạng sai ở dòng: '{line}'")
     return vouchers
 
-# === Optimization Logic ===
-@st.cache_data(show_spinner="🔍 Đang tính toán tối ưu...")
+# --- Tính toán tối ưu ---
+@st.cache_data(show_spinner="🔍 Đang tính toán... xin chờ...")
 def find_optimal_voucher_distribution(items, vouchers):
     best_total_cost = float('inf')
     best_solution_details = []
+
     item_indices = list(range(len(items)))
 
-    def recurse(remaining_item_indices, voucher_idx, current_groups):
+    def recursive(remaining_indices, voucher_idx, groups_info):
         nonlocal best_total_cost, best_solution_details
         if voucher_idx == len(vouchers):
-            remaining_cost = sum(items[i]['price'] for i in remaining_item_indices)
-            total_cost = sum(g['final'] for g in current_groups) + remaining_cost
+            remaining_cost = sum(items[i]["price"] for i in remaining_indices)
+            total_cost = sum(g["final"] for g in groups_info) + remaining_cost
+
+            if remaining_indices:
+                remaining_items = [items[i] for i in remaining_indices]
+                groups_info.append({
+                    "voucher": None,
+                    "items": remaining_items,
+                    "total": sum(i["price"] for i in remaining_items),
+                    "final": sum(i["price"] for i in remaining_items)
+                })
 
             if total_cost < best_total_cost:
                 best_total_cost = total_cost
-                full_groups = current_groups[:]
-                if remaining_item_indices:
-                    leftover_items = [items[i] for i in remaining_item_indices]
-                    full_groups.append({
-                        "voucher": None,
-                        "items": leftover_items,
-                        "total": sum(i['price'] for i in leftover_items),
-                        "final": sum(i['price'] for i in leftover_items)
-                    })
-                best_solution_details = full_groups
+                best_solution_details = list(groups_info)
+
+            if remaining_indices:
+                groups_info.pop()
             return
 
-        current_voucher = vouchers[voucher_idx]
-        recurse(remaining_item_indices, voucher_idx + 1, current_groups[:])  # skip
+        # Option 1: Bỏ qua voucher này
+        recursive(remaining_indices, voucher_idx + 1, list(groups_info))
 
-        for r in range(1, len(remaining_item_indices)+1):
-            for combo in combinations(remaining_item_indices, r):
+        # Option 2: Dùng voucher này
+        current_voucher = vouchers[voucher_idx]
+        for r in range(1, len(remaining_indices) + 1):
+            for combo in combinations(remaining_indices, r):
                 selected_items = [items[i] for i in combo]
-                total = sum(i['price'] for i in selected_items)
-                if total >= current_voucher['min_total']:
-                    discounted = total - current_voucher['discount']
-                    remaining = [i for i in remaining_item_indices if i not in combo]
-                    recurse(remaining, voucher_idx + 1, current_groups + [{
+                group_total = sum(item["price"] for item in selected_items)
+                if group_total >= current_voucher["min_total"]:
+                    discounted = group_total - current_voucher["discount"]
+                    new_remaining = [i for i in remaining_indices if i not in combo]
+                    new_groups = list(groups_info)
+                    new_groups.append({
                         "voucher": current_voucher,
                         "items": selected_items,
-                        "total": total,
+                        "total": group_total,
                         "final": discounted
-                    }])
+                    })
+                    recursive(new_remaining, voucher_idx + 1, new_groups)
 
-    recurse(item_indices, 0, [])
+    recursive(item_indices, 0, [])
+
     return best_solution_details, best_total_cost
 
-# === Trigger Button ===
+# --- Button & Kết quả ---
 st.markdown("""
     <div style="text-align: center; margin-top: 30px;">
         <form action="#">
@@ -129,27 +151,27 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# === Execute Optimization ===
 if st.button("🚀 Tính kết quả tối ưu"):
     items = parse_items(items_input)
     vouchers = parse_vouchers(voucher_input)
 
     if not items:
-        st.warning("❗ Vui lòng nhập ít nhất 1 món")
+        st.warning("❗ Bạn chưa nhập món.")
     elif not vouchers:
-        st.warning("❗ Vui lòng nhập ít nhất 1 voucher")
+        st.warning("❗ Bạn chưa nhập voucher.")
     else:
-        groups, final_cost = find_optimal_voucher_distribution(items, vouchers)
+        results, final_cost = find_optimal_voucher_distribution(items, vouchers)
 
         st.subheader("📄 KẾT QUẢ TỐI ƯU")
-        for idx, g in enumerate(groups, 1):
-            if g['voucher']:
-                st.markdown(f"**Nhóm {idx}** {g['voucher']['label']} _(Tổng: {g['total']}k → {g['final']}k)_")
+        for idx, group in enumerate(results, 1):
+            if group["voucher"]:
+                st.markdown(f"**Nhóm {idx}** {group['voucher']['label']} _(Tổng: {group['total']}k → {group['final']}k)_")
             else:
-                st.markdown(f"**Nhóm {idx}** _(Không dùng voucher)_ _(Tổng: {g['total']}k)_")
-            for item in g['items']:
-                st.markdown(f"- {item['name']} ({item['price']}k)")
-            st.markdown("---")
+                st.markdown(f"**Nhóm {idx}** _(Không dùng voucher)_ _(Tổng: {group['total']}k)_")
+            st.markdown("\n".join([f"- {item['name']} ({item['price']}k)" for item in group["items"]]))
+            st.markdown("")
 
-        original = sum(i['price'] for i in items)
-        st.success(f"✅ Tổng chi phí sau giảm giá: **{final_cost}k** (tiết kiệm **{original - final_cost}k**) ")
+        original = sum(item["price"] for item in items)
+        discount = original - final_cost
+        st.success(f"✅ Tổng chi phí sau giảm giá: **{final_cost}k** (giảm được **{discount}k**)")
+
