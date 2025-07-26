@@ -77,8 +77,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     align-items: flex-start; /* Căn chỉnh theo đầu của các phần tử (để tiêu đề sát icon)*/
     margin-bottom: 25px; /* Khoảng cách giữa các section */
     box-sizing: border-box;
-    /* Đảm bảo nền của input-section không có khoảng trắng */
-    background-color: #FFFDF1; 
+    background-color: #FFFDF1; /* Đảm bảo nền của input-section không có khoảng trắng */
 }
 
 /* Icon lớn trong hình tròn */
@@ -124,7 +123,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
-/* --- Xử lý khoảng trắng của Text Area và đảm bảo hiển thị --- */
+/* --- Xử lý Text Area: Chỉ áp dụng cho thẻ textarea và div bọc trực tiếp --- */
 
 /* Ẩn các label mặc định của Streamlit cho text area */
 .stTextArea label {
@@ -137,7 +136,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     border: 2px solid #C29A5F; /* Viền màu nâu đậm */
     padding: 12px;
     box-shadow: none; /* Bỏ đổ bóng bên trong */
-    width: 100%; /* Chiếm toàn bộ chiều rộng của cha */
+    width: calc(100% - 85px) !important; /* Tính toán chiều rộng để trừ đi khoảng thụt đầu dòng */
+    margin-left: 85px !important; /* Thụt đầu dòng 85px */
     box-sizing: border-box; /* Tính cả padding và border vào width */
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
@@ -145,29 +145,11 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
-/* Sử dụng data-testid để nhắm mục tiêu cụ thể hơn nếu cần */
 div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
     min-height: 90px; /* Chiều cao nhỏ hơn cho voucher textarea*/
 }
 
-/* Cố gắng giảm padding hoặc margin không mong muốn của các div cha của textarea */
-/* Điều này có thể giúp loại bỏ khoảng trắng thừa */
-div[data-testid="stTextArea"] {
-    margin-top: -10px !important; /* Di chuyển lên trên một chút để giảm khoảng cách */
-    padding: 0 !important; /* Loại bỏ padding */
-    background-color: #FFFDF1 !important; /* Đảm bảo nền khớp */
-}
-
-/* Nếu có div con của stTextArea có padding/margin, hãy thử reset */
-div[data-testid="stTextArea"] > div:first-child {
-    padding: 0 !important;
-    margin: 0 !important;
-    background-color: #FFFDF1 !important; /* Đảm bảo nền khớp */
-}
-
-
 /* --- Sửa lỗi nút bấm --- */
-/* Đảm bảo nút nằm gọn và có màu */
 div.stButton {
     background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
     padding: 0 !important; /* Loại bỏ padding nếu có */
@@ -478,16 +460,8 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # Sử dụng st.columns để tạo khoảng thụt đầu dòng một cách đáng tin cậy hơn
-    # Cột đầu tiên sẽ là khoảng trắng (width 85px), cột thứ hai sẽ chứa text area
-    # Đặt background-color cho các cột để kiểm soát nền
-    col_indent_items, col_textarea_items = st.columns([85, 1]) 
-
-    with col_indent_items:
-        st.markdown('<div style="background-color: #FFFDF1; height: 1px;"></div>', unsafe_allow_html=True) # Một div rỗng để giữ màu nền
-
-    with col_textarea_items:
-        items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
+    # st.text_area cho items
+    items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
 
     # Phần nhập danh sách voucher
     st.markdown(f"""
@@ -502,13 +476,8 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # Sử dụng st.columns cho voucher input cũng vậy
-    col_indent_voucher, col_textarea_voucher = st.columns([85, 1])
-    with col_indent_voucher:
-        st.markdown('<div style="background-color: #FFFDF1; height: 1px;"></div>', unsafe_allow_html=True) # Một div rỗng để giữ màu nền
-
-    with col_textarea_voucher:
-        voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
+    # st.text_area cho vouchers
+    voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
     # Nút tính toán
