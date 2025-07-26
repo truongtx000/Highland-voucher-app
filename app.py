@@ -513,22 +513,15 @@ with st.container(border=False):
             total_discount = original_total - final_cost
             
             for idx, group in enumerate(result_groups, 1):
+                st.markdown('<div class="result-group">', unsafe_allow_html=True)
                 if group["voucher"]:
-                    st.markdown(
-                        f'<p class="result-group-title">🎯 Nhóm {idx}: {group["voucher"]["label"]} (Tổng: {group["total"]}k → {group["final"]}k)</p>',
-                        unsafe_allow_html=True
-                    )
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: {group["voucher"]["label"]} (Tổng: {group["total"]}k → {group["final"]}k)</p>', unsafe_allow_html=True)
                 else:
-                    st.markdown(
-                        f'<p class="result-group-title">📦 Nhóm {idx}: Không dùng voucher (Tổng: {group["total"]}k)</p>',
-                        unsafe_allow_html=True
-                    )
-
+                    st.markdown(f'<p class="result-group-title">Nhóm {idx}: Không dùng voucher (Tổng: {group["total"]}k)</p>', unsafe_allow_html=True)
+                
                 for item in group["items"]:
                     st.markdown(f'<p class="result-item">- {item["name"]} ({item["price"]}k)</p>', unsafe_allow_html=True)
-
-                # Ngăn cách giữa các nhóm bằng đường kẻ ngang
-                st.markdown("<hr>", unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown(f'<p class="final-cost">Tổng chi phí sau giảm giá: <strong>{final_cost}k</strong> <span class="discount-amount">(giảm được {total_discount}k)</span></p>', unsafe_allow_html=True)
         elif not items and not voucher_input.strip():
