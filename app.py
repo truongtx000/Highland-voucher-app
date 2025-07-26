@@ -9,6 +9,7 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 # --- CSS Tùy Chỉnh để tạo giao diện chính xác như hình bạn cung cấp ---
 st.markdown(
     """
+     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 /* Import font Roboto Condensed từ Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
