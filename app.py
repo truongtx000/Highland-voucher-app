@@ -1,4 +1,3 @@
-
 import streamlit as st
 from itertools import combinations
 import math
@@ -10,46 +9,8 @@ st.set_page_config(page_title="Tiết Kiệm Highland Cùng Voucher", layout="ce
 st.markdown(
     """
 <style>
-
-/* Import font Roboto Condensed từ Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
-
-/* Sửa lỗi nút bấm */
-div.stButton {
-    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
-    padding: 0 !important; /* Loại bỏ padding nếu có */
-    margin-top: 30px; /* Khoảng cách với phần trên */
-    margin-bottom: 20px; /* Khoảng cách với phần dưới */
-    text-align: center; /* Căn giữa nút */
-}
-
-div.stButton > button:first-child {
-    background-color: #A02B2B; /* Màu đỏ đậm */
-    color: white;
-    border-radius: 12px; /* Bo góc */
-    height: 3.5em; /* Chiều cao nút */
-    width: 90%; /* Điều chỉnh lại width cho an toàn */
-    max-width: 400px; /* Giới hạn chiều rộng tối đa */
-    display: inline-block; /* Để căn giữa với text-align: center */
-    font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
-    font-weight: 800 !important; /* Rất đậm, dùng !important */
-    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font Roboto Condensed, dùng !important */
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
-    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
-    letter-spacing: 0.5px;
-    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
-    line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
-    cursor: pointer;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
-}
-
-/* Hiệu ứng khi di chuột qua nút */
-div.stButton > button:first-child:hover {
-    background-color: #861d1f; /* Màu đỏ sẫm hơn khi hover */
-    transform: scale(1.02); /* Nút to lên một chút */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
-}
+/* Import font Roboto Condensed từ Google Fonts - THÊM FONT-WEIGHT 800 */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&display=swap');
 
 /* Đặt màu nền chung cho toàn bộ trang */
 body {
@@ -109,7 +70,6 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
 
-
 /* Container cho mỗi phần nhập liệu (Món ăn, Voucher) */
 .input-section {
     display: flex; /* Dùng flexbox để căn chỉnh icon và nội dung */
@@ -162,7 +122,7 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     line-height: 1.4;
 }
 
-/* --- Xử lý Text Area: Chỉ áp dụng cho thẻ textarea và div bọc trực tiếp --- */
+/* --- Xử lý Text Area: Đảm bảo hiển thị --- */
 
 /* Ẩn các label mặc định của Streamlit cho text area */
 .stTextArea label {
@@ -180,8 +140,8 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
     font-size: 1.1em;
     min-height: 150px; /* Chiều cao tối thiểu, tăng lên */
     background-color: white; /* Nền trắng cho textbox */
-    /* LOẠI BỎ margin-left và bất kỳ can thiệp bố cục nào khác */
     margin-left: 0 !important; 
+    margin-top: 0 !important; 
 }
 
 /* Cho text area của voucher nhỏ lại một chút */
@@ -193,13 +153,51 @@ div[data-testid="stTextArea"].stTextArea:nth-of-type(2) textarea {
 div[data-testid="stTextArea"] {
     margin: 0 !important;
     padding: 0 !important;
-    background-color: transparent !important; /* Đảm bảo nền trong suốt */
+    background-color: transparent !important; 
 }
 
 div[data-testid="stTextArea"] > div:first-child {
     margin: 0 !important;
     padding: 0 !important;
-    background-color: transparent !important; /* Đảm bảo nền trong suốt */
+    background-color: transparent !important; 
+}
+
+
+/* --- Sửa lỗi nút bấm (đã tích hợp font-weight 800) --- */
+div.stButton {
+    background-color: #FFFDF1 !important; /* Đảm bảo khớp với nền trang */
+    padding: 0 !important; /* Loại bỏ padding nếu có */
+    margin-top: 30px; /* Khoảng cách với phần trên */
+    margin-bottom: 20px; /* Khoảng cách với phần dưới */
+    text-align: center; /* Căn giữa nút */
+}
+
+div.stButton > button:first-child {
+    background-color: #A02B2B; /* Màu đỏ đậm */
+    color: white;
+    border-radius: 12px; /* Bo góc */
+    height: 3.5em; /* Chiều cao nút */
+    width: 90%; /* Điều chỉnh lại width cho an toàn */
+    max-width: 400px; /* Giới hạn chiều rộng tối đa */
+    display: inline-block; /* Để căn giữa với text-align: center */
+    font-size: 1.3em !important; /* Cỡ chữ lớn hơn, dùng !important*/
+    font-weight: 800 !important; /* Rất đậm, dùng !important */
+    font-family: 'Roboto Condensed', sans-serif !important; /* Áp dụng font Roboto Condensed, dùng !important */
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    letter-spacing: 0.5px;
+    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng chữ nhẹ để nổi bật hơn */
+}
+
+/* Hiệu ứng khi di chuột qua nút */
+div.stButton > button:first-child:hover {
+    background-color: #861d1f; /* Màu đỏ sẫm hơn khi hover */
+    transform: scale(1.02); /* Nút to lên một chút */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
 }
 
 /* Tiêu đề cho phần kết quả */
@@ -217,20 +215,14 @@ div[data-testid="stTextArea"] > div:first-child {
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
 }
 
-/* Container cho mỗi nhóm kết quả (voucher + món ăn) */
- .result-group {
-            margin-top: 20px;
-            padding: 10px 0;
-            background-color: transparent; /* ✅ Bỏ nền trắng */
-            border: none; /* ✅ Không viền */
-        }
-        .result-group-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .result-item {
-            margin-left: 10px;
-        }
+/* Container cho mỗi nhóm kết quả (voucher + món ăn) - Đã sửa theo feedback của bạn */
+.result-group {
+    margin-top: 20px;
+    padding: 10px 0;
+    background-color: transparent; /* Bỏ nền trắng */
+    border: none; /* Không viền */
+}
+
 .result-group-title {
     font-weight: bold;
     color: #424242; /* Màu xám đậm */
@@ -307,10 +299,10 @@ def parse_items(text):
                 items.append({"id": i, "name": name.strip(), "price": price})
             except ValueError:
                 st.warning(f"❗ Lỗi định dạng giá ở dòng: '{line}'. Vui lòng nhập số nguyên.")
-                return [] # Trả về rỗng để báo hiệu lỗi
-        elif line.strip(): # Nếu có dòng không chứa dấu phẩy nhưng không rỗng
+                return [] 
+        elif line.strip(): 
             st.warning(f"❗ Định dạng không đúng ở dòng: '{line}'. Vui lòng nhập theo dạng 'tên, giá'.")
-            return [] # Trả về rỗng để báo hiệu lỗi
+            return [] 
     return items
 
 @st.cache_data
@@ -329,10 +321,10 @@ def parse_vouchers(text):
                 })
             except ValueError:
                 st.warning(f"❗ Lỗi định dạng voucher ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
-                return [] # Trả về rỗng để báo hiệu lỗi
+                return [] 
         elif line.strip():
             st.warning(f"❗ Định dạng không đúng ở dòng: '{line}'. Vui lòng nhập theo dạng 'min_total,discount'.")
-            return [] # Trả về rỗng để báo hiệu lỗi
+            return [] 
     return vouchers
 
 # --- Thuật toán tìm kiếm tối ưu toàn cục ---
@@ -346,29 +338,17 @@ def find_optimal_voucher_distribution(items, vouchers):
     best_overall_cost = float('inf')
     best_overall_solution = []
 
-    # Tạo một danh sách các index của món ăn để dễ dàng thao tác
     item_indices = list(range(len(items)))
-    
-    # Chuyển danh sách voucher thành dictionary để truy cập theo ID nhanh hơn
-    # (Vì trong quá trình đệ quy, current_voucher_index sẽ dùng để truy cập voucher)
     vouchers_dict = {v["id"]: v for v in vouchers}
 
-
-    # Hàm đệ quy để thử mọi cách phân chia món ăn cho các voucher
-    # remaining_item_indices: tuple các chỉ số món ăn còn lại (dùng tuple để hashable cho cache nếu cần, hoặc để giữ nguyên thứ tự)
-    # current_voucher_index: chỉ số voucher đang xét
-    # current_groups_info: danh sách các nhóm món ăn đã được gán cho voucher
     def find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index, current_groups_info):
         nonlocal best_overall_cost, best_overall_solution
 
-        # Nếu đã xét hết tất cả các voucher
         if current_voucher_index == len(vouchers):
             remaining_cost = sum(items[i]["price"] for i in remaining_item_indices_tuple)
             final_cost = sum(g["final"] for g in current_groups_info) + remaining_cost
             
-            # Tạo một bản sao của solution để lưu trữ
             current_solution_snapshot = list(current_groups_info)
-            # Nếu có các món còn lại, thêm vào nhóm "không voucher"
             if remaining_item_indices_tuple:
                 remaining_items_details = [items[i] for i in remaining_item_indices_tuple]
                 current_solution_snapshot.append({
@@ -385,19 +365,14 @@ def find_optimal_voucher_distribution(items, vouchers):
             return
 
         current_voucher = vouchers_dict.get(current_voucher_index)
-        if not current_voucher: # Nếu không tìm thấy voucher với index này (ví dụ, list vouchers rỗng)
-            # Tiếp tục với voucher tiếp theo mà không sử dụng voucher hiện tại
+        if not current_voucher: 
             find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index + 1, list(current_groups_info))
             return
 
-
-        # Option 1: Không sử dụng voucher hiện tại cho bất kỳ món nào
-        # Chuyển sang voucher tiếp theo
+        # Option 1: Không sử dụng voucher hiện tại
         find_best_combination_recursive(remaining_item_indices_tuple, current_voucher_index + 1, list(current_groups_info))
 
-
-        # Option 2: Sử dụng voucher hiện tại cho một tập hợp các món ăn
-        # Duyệt qua tất cả các tổ hợp con của các món ăn còn lại cho voucher hiện tại
+        # Option 2: Sử dụng voucher hiện tại
         for r in range(1, len(remaining_item_indices_tuple) + 1):
             for combo_indices in combinations(remaining_item_indices_tuple, r):
                 selected_items_for_voucher = [items[i] for i in combo_indices]
@@ -406,7 +381,6 @@ def find_optimal_voucher_distribution(items, vouchers):
                 if group_total >= current_voucher["min_total"]:
                     discounted_group_cost = group_total - current_voucher["discount"]
                     
-                    # Tạo trạng thái mới
                     new_remaining_item_indices = tuple(sorted([i for i in remaining_item_indices_tuple if i not in combo_indices]))
                     new_groups_info = list(current_groups_info)
                     new_groups_info.append({
@@ -416,26 +390,18 @@ def find_optimal_voucher_distribution(items, vouchers):
                         "final": discounted_group_cost
                     })
 
-                    # Tiếp tục đệ quy với các món còn lại và voucher tiếp theo
                     find_best_combination_recursive(new_remaining_item_indices, current_voucher_index + 1, new_groups_info)
 
-    # Bắt đầu tìm kiếm với tất cả các món và voucher đầu tiên
-    # Chuyển remaining_item_indices thành tuple để đảm bảo hashable nếu cần cho cache và tránh thay đổi trong đệ quy
     find_best_combination_recursive(tuple(sorted(item_indices)), 0, [])
 
-    # Tổng kết chi phí gốc
     original_total = sum(item["price"] for item in items)
     
-    # Sắp xếp lại giải pháp theo thứ tự các nhóm đã được áp dụng hoặc không có voucher
     final_solution_groups = []
     
-    # Thêm các nhóm có voucher trước
     for group in best_overall_solution:
         if group["voucher"]:
             final_solution_groups.append(group)
     
-    # Thêm nhóm không có voucher (nếu có)
-    # Cần kiểm tra lại để đảm bảo không bị trùng lặp hoặc thiếu sót món
     assigned_item_ids_in_solution = set()
     for group in best_overall_solution:
         for item in group["items"]:
@@ -451,10 +417,7 @@ def find_optimal_voucher_distribution(items, vouchers):
             "final": sum(item["price"] for item in remaining_unassigned_items_at_end)
         })
     
-    # Sắp xếp lại các nhóm để nhóm có voucher hiển thị trước, theo thứ tự giảm giá
-    # (Đảm bảo nhóm không voucher luôn ở cuối)
     final_solution_groups.sort(key=lambda g: (0 if g["voucher"] else 1, -g["voucher"]["discount"] if g["voucher"] else 0))
-
 
     return final_solution_groups, best_overall_cost
 
@@ -481,7 +444,6 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # st.text_area cho items - BỎ MỌI THỤT ĐẦU DÒNG CSS TÙY CHỈNH
     items_input = st.text_area("items_input_area", height=150, label_visibility="collapsed", value="cf sữa m, 39\ntrà sen, 45\nbh kem cheese, 65\nbh kem cheese, 65\nphô mai kem, 69")
 
     # Phần nhập danh sách voucher
@@ -497,7 +459,6 @@ with st.container(border=False):
         </div>
     """, unsafe_allow_html=True)
 
-    # st.text_area cho vouchers - BỎ MỌI THỤT ĐẦU DÒNG CSS TÙY CHỈNH
     voucher_input = st.text_area("voucher_input_area", value="135,30\n135,30\n169,40", height=100, label_visibility="collapsed")
 
 
