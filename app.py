@@ -191,11 +191,13 @@ div.stButton > button:first-child {
     transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
     letter-spacing: 0.5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
+    font-weight: 900; /* Rất đậm */
 }
 
 /* Hiệu ứng khi di chuột qua nút */
 div.stButton > button:first-child:hover {
-    background-color: #8D2525; /* Màu đỏ sẫm hơn khi hover */
+    background-color: #FFFFFF; /* Màu đỏ sẫm hơn khi hover */
+    color: black;
     box-shadow: 0 6px 15px rgba(0,0,0,0.35); /* Đổ bóng mạnh hơn nữa */
     transform: translateY(-2px); /* Nút nhích lên một chút */
     cursor: pointer; /* Biểu tượng con trỏ khi di chuột */
