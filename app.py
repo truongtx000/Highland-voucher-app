@@ -38,7 +38,7 @@ st.markdown("""
             margin: 0;
             color: #555;
             font-size: 0.95rem;
-            line-height: 1.3;
+            line-height: 0.5;
         }
 
         /* Style cho textarea */
