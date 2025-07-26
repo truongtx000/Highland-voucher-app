@@ -107,11 +107,11 @@ div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] {
 }
 
 .input-content h2 {
-    font-size: 2.5em; /* Kích thước chữ lớn */
-    font-weight: 900; /* Rất đậm */
-    margin: 0; /* Bỏ margin mặc định */
-    letter-spacing: 0.5px; /* Khoảng cách giữa các chữ cái */
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.2); /* Đổ bóng chữ */
+    font-size: 1.4em; /* Kích thước chữ tiêu đề */
+    font-weight: bold;
+    color: #333;
+    margin-top: 0px !important; /* Đảm bảo sát với icon, override mọi margin mặc định của h2*/
+    margin-bottom: 5px;
     font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
     line-height: 1.2; /* Khoảng cách dòng cho tiêu đề */
 }
@@ -175,21 +175,22 @@ div.stButton {
 div.stButton > button:first-child {
     background-color: #A02B2B; /* Màu đỏ đậm */
     color: white;
-    border-radius: 12px; /* Bo góc */
-    height: 3.5em; /* Chiều cao nút */
-    width: 90%; /* Giảm một chút so với 100% để tránh tràn */
-    max-width: 400px; /* Giới hạn chiều rộng tối đa */
-    display: inline-block; /* Để căn giữa với text-align: center */
-    font-size: 1.3em; /* Cỡ chữ lớn hơn */
-    font-weight: bold;
+    border-radius: 12px;
+    height: 3.5em;
+    width: 100%;
+    max-width: 500px;
+    display: inline-block;
+    font-size: 1.6em;         /* ↑ Tăng size lên nữa nếu muốn rõ hơn */
+    font-weight: 800;         /* ↑ Tăng độ đậm (700: bold, 800: extra bold) */
+    font-family: 'Roboto Condensed', sans-serif;
     border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25); /* Đổ bóng mạnh */
-    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    transition: all 0.3s ease-in-out;
     letter-spacing: 0.5px;
-    font-family: 'Roboto Condensed', sans-serif; /* Áp dụng font Roboto Condensed */
-    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
-    line-height: 1.2; /* Điều chỉnh khoảng cách dòng cho chữ trên nút */
+    white-space: normal;
+    line-height: 1.3;         /* Có thể tăng thêm nếu text dài */
 }
+
 
 /* Hiệu ứng khi di chuột qua nút */
 div.stButton > button:first-child:hover {
